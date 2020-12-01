@@ -1,0 +1,5 @@
+[user]
+	email = mat@greil.fr
+	name = Mateo Greil
+[pull]
+	rebase = true
