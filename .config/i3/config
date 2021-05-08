@@ -54,6 +54,7 @@ bindsym Shift+Print exec (import ~/Pictures/screenshot-$(date +'%d-%m-%Y-%H:%M:%
 ################################################################################################
 
 # Media volume controls
+# TODO : re-enable sound is not working
 bindsym XF86AudioMute         exec notify-send "$(amixer sset 'Master' toggle | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
 bindsym XF86AudioLowerVolume  exec notify-send "$(amixer sset 'Master' 5%-    | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
 bindsym XF86AudioRaiseVolume  exec notify-send "$(amixer sset 'Master' 5%+    | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
