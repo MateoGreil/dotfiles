@@ -48,15 +48,23 @@ exec --no-startup-id volumeicon
 bindsym $mod+Ctrl+m exec terminal -e 'alsamixer'
 bindsym Print exec (import -window root ~/Pictures/screenshot-$(date +'%d-%m-%Y-%H:%M:%S').png && notify-send 'screenshot saved') || notify-send 'error'
 bindsym Shift+Print exec (import ~/Pictures/screenshot-$(date +'%d-%m-%Y-%H:%M:%S').png && notify-send 'screenshot saved') || notify-send 'error'
-#exec --no-startup-id pulseaudio
 #exec --no-startup-id pa-applet
 #bindsym $mod+Ctrl+m exec pavucontrol
 
 ################################################################################################
 
-# Screen brightness controls
-# bindsym XF86MonBrightnessUp exec "xbacklight -inc 10; notify-send 'brightness up'"
-# bindsym XF86MonBrightnessDown exec "xbacklight -dec 10; notify-send 'brightness down'"
+# Media volume controls
+bindsym XF86AudioMute         exec notify-send "$(amixer sset 'Master' toggle | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
+bindsym XF86AudioLowerVolume  exec notify-send "$(amixer sset 'Master' 5%-    | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
+bindsym XF86AudioRaiseVolume  exec notify-send "$(amixer sset 'Master' 5%+    | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
+# # Sreen brightness controls
+# bindsym XF86MonBrightnessUp   exec xbacklight -inc 20 # increase screen brightness
+# bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
+# # Media player controls
+# bindsym XF86AudioPlay exec playerctl play-pause
+# bindsym XF86AudioPause exec playerctl play-pause
+# bindsym XF86AudioNext exec playerctl next
+# bindsym XF86AudioPrev exec playerctl previous
 
 # Start Applications
 bindsym $mod+Ctrl+b exec terminal -e 'bmenu'
