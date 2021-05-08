@@ -48,7 +48,6 @@ source ~/.config/nvim/linter.vim
 source ~/.config/nvim/completion.vim
 source ~/.config/nvim/git.vim
 source ~/.config/nvim/xml.vim
-source ~/.config/nvim/django.vim
 source ~/.config/nvim/shortcuts.vim
 
 let g:coc_disable_startup_warning = 1
