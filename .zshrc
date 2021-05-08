@@ -9,6 +9,10 @@ eval $(keychain --eval id_rsa)
 # source fzf config
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+SAVEHIST=1000
+HISTSIZE=100
+HISTFILE=/home/mat/.zsh_history
+
 ## ALIAS ##
 # tip
 alias ls="ls --color=auto"
