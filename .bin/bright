@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# https://askubuntu.com/questions/1150339/increment-brightness-by-value-using-xrandr
+
 MON="eDP-1"    # Discover monitor name with: xrandr | grep " connected"
 STEP=5          # Step Up/Down brightnes by: 5 = ".05", 10 = ".10", etc.
 
