@@ -59,8 +59,8 @@ bindsym XF86AudioMute         exec notify-send "$(amixer sset 'Master' toggle | 
 bindsym XF86AudioLowerVolume  exec notify-send "$(amixer sset 'Master' 5%-    | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
 bindsym XF86AudioRaiseVolume  exec notify-send "$(amixer sset 'Master' 5%+    | tail -n 1 | cut -d ' ' -f 6-10)" -h string:x-canonical-private-synchronous:sound
 # # Sreen brightness controls
-# bindsym XF86MonBrightnessUp   exec xbacklight -inc 20 # increase screen brightness
-# bindsym XF86MonBrightnessDown exec xbacklight -dec 20 # decrease screen brightness
+bindsym XF86MonBrightnessUp   exec notify-send "$(bright +)" -h string:x-canonical-private-synchronous:brightness # exec xbacklight -inc 20
+bindsym XF86MonBrightnessDown exec notify-send "$(bright -)" -h string:x-canonical-private-synchronous:brightness # exec xbacklight -dec 20
 # # Media player controls
 # bindsym XF86AudioPlay exec playerctl play-pause
 # bindsym XF86AudioPause exec playerctl play-pause
