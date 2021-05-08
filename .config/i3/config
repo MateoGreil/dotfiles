@@ -34,7 +34,7 @@ bindsym $mod+Shift+q kill
 
 # start program launcher
 bindsym $mod+d exec --no-startup-id dmenu_recency
-bindsym $mod+p exec rofi -run-command "zsh -i -c '{cmd}'" -show run -dpi 170
+bindsym $mod+p exec rofi -run-command "zsh -i -c '{cmd}'" -show run
 bindsym $mod+Ctrl+space exec rofi -show emoji -modi emoji -a copy
 
 # launch categorized menu
