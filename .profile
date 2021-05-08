@@ -1,6 +1,12 @@
+# ENV VARIABLES
 export EDITOR=/usr/bin/nano
 export BROWSER=/usr/bin/brave-browser
-export PATH=$PATH:/home/mat/.local/share/gem/ruby/2.7.0/bin:/home/mat/.cargo/bin:/home/mat/.bin
+export PATH=$PATH:/home/mat/.cargo/bin:/home/mat/.bin
+# zsh
+export SAVEHIST=1000
+export HISTSIZE=100
+export HISTFILE=/home/mat/.zsh_history
+
 
 # Set keyboard
 /usr/bin/setxkbmap -option "ctrl:nocaps"
