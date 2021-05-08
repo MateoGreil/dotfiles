@@ -365,3 +365,5 @@ client.unfocused        $darkgray $darkgray $gray $purple $darkgray
 client.urgent           $red $red $white $red $red
 
 #end of window title bars & borders section
+
+exec_always --no-startup-id feh --bg-scale /home/mat/.config/i3/wallpapers/mushishi.png
