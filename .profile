@@ -1,5 +1,5 @@
 export EDITOR=/usr/bin/nano
-export BROWSER=/usr/bin/google-chrome-stable
+export BROWSER=/usr/bin/brave-browser
 export PATH=$PATH:/home/mat/.local/share/gem/ruby/2.7.0/bin:/home/mat/.cargo/bin:/home/mat/.bin
 
 # Set keyboard
