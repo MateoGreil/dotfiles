@@ -14,13 +14,19 @@ HISTSIZE=100
 HISTFILE=/home/mat/.zsh_history
 
 ## ALIAS ##
-# tip
+# other
 alias ls="ls --color=auto"
+# git
+alias g="git"
+alias gs="git stash"
+alias gsp="git stash pop"
+alias gp="git pull"
 # nvim
 alias v="nvim"
 alias vi="nvim"
 alias vim="nvim"
 # docker
+alias d="docker"
 alias dps="docker ps"
 alias da="docker attach"
 alias de"docker exec -it"
