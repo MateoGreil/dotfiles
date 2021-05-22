@@ -50,6 +50,7 @@ alias maps="brave-browser-stable --profile-directory=Default --app-id=bkaeedcadg
 alias messenger="brave-browser-stable --app=\"https://www.messenger.com/\""
 alias osm="brave-browser-stable --app=\"https://www.openstreetmap.org/\""
 alias protonmail="brave-browser-stable --app=\"https://beta.protonmail.com/\""
+alias youtube="brave-browser-stable --app=\"https://www.youtube.com/\""
 alias whatsapp="brave-browser-stable --app=\"https://web.whatsapp.com/\""
 
 ## FUNCTION ##
