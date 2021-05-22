@@ -43,14 +43,14 @@ alias dcr="docker-compose run"
 # docker-compose tip
 alias dgit="docker-compose exec wecasa git"
 # chrome
-alias protonmail="brave-browser-stable --app=\"https://beta.protonmail.com/\""
-alias gmail="brave-browser-stable --app=\"https://mail.google.com/mail/u/2/\""
 alias calendar="brave-browser-stable --app=\"https://calendar.protonmail.com/\""
 alias deezer="brave-browser-stable --app=\"https://www.deezer.com/fr/\""
-alias messenger="brave-browser-stable --app=\"https://www.messenger.com/\""
-alias whatsapp="brave-browser-stable --app=\"https://web.whatsapp.com/\""
-alias osm="brave-browser-stable --app=\"https://www.openstreetmap.org/\""
+alias gmail="brave-browser-stable --app=\"https://mail.google.com/mail/u/2/\""
 alias maps="brave-browser-stable --profile-directory=Default --app-id=bkaeedcadgimgkieaecleinibbmmohfd"
+alias messenger="brave-browser-stable --app=\"https://www.messenger.com/\""
+alias osm="brave-browser-stable --app=\"https://www.openstreetmap.org/\""
+alias protonmail="brave-browser-stable --app=\"https://beta.protonmail.com/\""
+alias whatsapp="brave-browser-stable --app=\"https://web.whatsapp.com/\""
 
 ## FUNCTION ##
 # xrandr
