@@ -1,3 +1,7 @@
 /* DPI */
 Xft.dpi: 200
 rofi.dpi: 200
+
+i3-wm.binding.launcher.app: p
+i3-wm.binding.launcher.cmd: Shift+p
+i3-wm.binding.shutdown: 0
