@@ -19,3 +19,10 @@ sudo apt install firefox
 ```
 
 Theme: [Gruvbox Dark Theme](https://addons.mozilla.org/en-US/firefox/addon/gruvbox-dark-theme/)
+
+## Editor
+
+[Neovim](https://neovim.io/):
+```
+sudo apt install nvim
+```
