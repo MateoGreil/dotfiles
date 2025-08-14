@@ -14,6 +14,8 @@ echo "================================================"
 echo "🖥️  INSTALLING REGOLITH DESKTOP"
 echo "================================================"
 
+# https://regolith-desktop.com/docs/using-regolith/install/
+
 # Version detection
 UBUNTU_VERSION=$(lsb_release -sr | cut -d. -f1)
 case $UBUNTU_VERSION in
