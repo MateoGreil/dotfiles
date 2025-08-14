@@ -61,7 +61,23 @@ else
     echo "❌ Skipping Regolith installation (unsupported version)"
 fi
 
+# Additional applications section
 echo ""
 echo "================================================"
-echo "📝 REGOLITH INSTALLATION SUMMARY COMPLETED"
+echo "📦 INSTALLING ADDITIONAL APPLICATIONS"
 echo "================================================"
+echo "🦀 Installing Alacritty terminal..."
+sudo apt install -y alacritty
+echo "🦊 Installing Firefox browser..."
+sudo apt install -y firefox
+echo "📝 Installing Neovim text editor..."
+sudo apt install -y nvim
+echo "✅ Additional applications installed successfully"
+
+echo ""
+echo "================================================"
+echo "📝 INSTALLATION COMPLETED"
+echo "================================================"
+if [ -n "$UBUNTU_CODENAME" ]; then
+    echo "🔄 NOTE: You need to reboot for Regolith to appear"
+fi
