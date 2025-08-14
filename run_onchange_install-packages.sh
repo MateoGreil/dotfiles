@@ -1,5 +1,9 @@
 #!/bin/sh
 
+# IMPORTANT: This script MUST be idempotent as it may be executed multiple times
+# by chezmoi's onChange hook. All operations should be safe to run repeatedly
+# without causing errors or unexpected behavior.
+
 # Initial system check
 echo "================================================"
 echo "🔍 SYSTEM COMPATIBILITY CHECK"
