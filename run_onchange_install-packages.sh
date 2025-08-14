@@ -1,5 +1,20 @@
 #!/bin/sh
 
+# Initial system check
+echo "================================================"
+echo "🔍 SYSTEM COMPATIBILITY CHECK"
+echo "================================================"
+
+if [ ! -f /etc/os-release ] || ! grep -q "Ubuntu" /etc/os-release; then
+    echo "❌ This script is designed for Ubuntu only"
+    echo "📌 Detected system is not Ubuntu - exiting"
+    echo "================================================"
+    exit 0
+fi
+
+echo "✅ Ubuntu system detected - proceeding with installation"
+echo ""
+
 # System update section
 echo "================================================"
 echo "🔄 UPDATING SYSTEM PACKAGES"
