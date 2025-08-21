@@ -1,28 +1,10 @@
 # dotfiles
 
-## Linux
+1. Install [Ubuntu](https://ubuntu.com/download/desktop)
+2. Install and apply [chezmoi](https://www.chezmoi.io/install/#one-line-binary-install):
 
-[Ubuntu](https://ubuntu.com/download/desktop) + [Regolith](https://regolith-desktop.com/) + regolith-look-gruvbox
-
-## Terminal
-
-[Alacritty](https://alacritty.org/):
 ```
-sudo apt install Alacritty
+sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply MateoGreil
 ```
 
-## Browser
-
-[Firefox](https://www.firefox.com):
-```
-sudo apt install firefox
-```
-
-Theme: [Gruvbox Dark Theme](https://addons.mozilla.org/en-US/firefox/addon/gruvbox-dark-theme/)
-
-## Editor
-
-[Neovim](https://neovim.io/):
-```
-sudo apt install nvim
-```
+3. Reboot
