@@ -84,8 +84,8 @@ echo "🦊 Installing Firefox browser..."
 sudo apt install -y firefox
 echo "📝 Installing Neovim text editor..."
 sudo snap install nvim --classic
-echo "📝 Installing ripgrep..."
-sudo apt install ripgrep
+echo "🧰 Installing ripgrep, xclip..."
+sudo apt install ripgrep xclip
 echo "✅ Additional applications installed successfully"
 echo ""
 
