@@ -1,3 +1,4 @@
 regolith.wallpaper.file: ~/.config/backgrounds/mushishi.jpg
 regolith.wallpaper.options: zoom
 wm.bar.position: top
+regolith.look.path: /usr/share/regolith-look/gruvbox
