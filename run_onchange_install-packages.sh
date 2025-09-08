@@ -85,7 +85,7 @@ sudo apt install -y firefox
 echo "📝 Installing Neovim text editor..."
 sudo snap install nvim --classic
 echo "🧰 Installing ripgrep, xclip, fzf..."
-sudo apt install -y ripgrep xclip fzf
+sudo apt install -y ripgrep xclip fzf universal-ctags
 echo "💻 Installing omzsh..."
 sudo apt install -y zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
