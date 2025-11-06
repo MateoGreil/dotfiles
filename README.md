@@ -2,6 +2,10 @@
 
 This repository contains my dotfiles and configuration scripts for setting up a development environment on Ubuntu, primarily tailored for Regolith Desktop, Neovim (Lua-based configuration), and shell customization. It leverages [chezmoi](https://www.chezmoi.io/) for dotfile management.
 
+![Screenshot 1](screenshot1.png)
+
+![Screenshot 2](screenshot2.png)
+
 ## Installation (Quick Start)
 
 1. **Install Ubuntu**  
