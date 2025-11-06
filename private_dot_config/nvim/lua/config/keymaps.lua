@@ -16,3 +16,9 @@ map("n", ",cl", ':let @+=expand("%:p")<CR>', { desc = "Copy absolute file path t
 map("t", "<Esc>", "<C-\\><C-n>", { desc = "Go to normal mode from terminal" })
 -- Open current file in a new tab
 map("n", "<C-w>f", ":tabe %<CR>", { noremap = true, silent = true, desc = "Open current file in a new tab" })
+
+-- Telescope
+local telescope = require("telescope.builtin")
+map("n", ":Rg", telescope.live_grep, { desc = "Telescope live grep" })
+map("n", "<C-p>", telescope.find_files, { desc = "Telescope find files" })
+map("n", "<C-b>", telescope.buffers, { desc = "Telescope buffers" })
