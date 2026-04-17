@@ -78,12 +78,12 @@ echo ""
 echo "================================================"
 echo "📦 INSTALLING ADDITIONAL APPLICATIONS"
 echo "================================================"
-echo "🦀 Installing Alacritty terminal..."
-sudo apt install -y alacritty
 echo "🦊 Installing Firefox browser..."
 sudo apt install -y firefox
 echo "📝 Installing Neovim text editor..."
 sudo snap install nvim --classic
+echo "🦀 Installing Ghostty terminal..."
+sudo snap install ghostty --classic
 echo "🧰 Installing ripgrep, xclip, fzf..."
 sudo apt install -y ripgrep xclip fzf universal-ctags
 echo "💻 Installing omzsh..."
