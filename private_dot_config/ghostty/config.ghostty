@@ -1,0 +1,5 @@
+window-theme = system
+gtk-titlebar = false
+gtk-wide-tabs = false
+window-decoration = none
+theme = Gruvbox Material Dark
