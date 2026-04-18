@@ -1,6 +1,6 @@
 # dotfiles
 
-This repository contains my dotfiles and configuration scripts for setting up a development environment on [Ubuntu](https://ubuntu.com/), primarily tailored for [Regolith Desktop](https://regolith-desktop.com/), [Neovim](https://neovim.io/) (Lua-based configuration), and shell customization. It leverages [chezmoi](https://www.chezmoi.io/) for dotfile management.
+This repository contains my dotfiles and configuration scripts for setting up a development environment on [Ubuntu](https://ubuntu.com/), primarily tailored for [Regolith Desktop](https://regolith-desktop.com/), [Neovim](https://neovim.io/) (Lua-based configuration), shell customization, and [Claude Code](https://claude.ai/code) AI assistant integration. It leverages [chezmoi](https://www.chezmoi.io/) for dotfile management. Notifications are handled by [Rofication](https://github.com/regolith-linux/rofication) with [herbe](https://github.com/dudik/herbe) for popup display.
 
 ![Screenshot 1](screenshot1.png)
 
@@ -45,6 +45,17 @@ This repository contains my dotfiles and configuration scripts for setting up a 
   - Options and appearance tweaks (see `lua/config/options.lua`)
   - Gruvbox themed (set to 120)
 
+### Notifications
+
+- **Rofication** — silent notification queue (default in Regolith)
+- **herbe** — lightweight popup overlay for all incoming notifications, with sound via `paplay`
+- A D-Bus sniffer script (`~/.local/bin/herbe-notifications`) auto-started by i3
+
+### Claude Code
+
+- **Claude Code** settings (`~/.claude/settings.json`)
+  - Stop hook: sends a desktop notification with Claude's last response when a task finishes
+
 ### Other System and package dependencies (from scripts):
 
 - **APT Updates** via `run_onchange_install-packages.sh`
@@ -70,3 +81,5 @@ Don't forget to update chezmoi with `chezmoi add <file>`, `chezmoi cd` and add t
 - [Regolith Desktop](https://regolith-desktop.com/)
 - [LazyVim](https://www.lazyvim.org/)
 - [Avante.nvim](https://github.com/yetone/avante.nvim)
+- [herbe](https://github.com/dudik/herbe)
+- [Claude Code](https://claude.ai/code)
