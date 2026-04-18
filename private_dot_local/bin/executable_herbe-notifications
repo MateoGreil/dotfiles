@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Sniffs D-Bus for incoming notifications and shows them via herbe
+dbus-monitor "interface='org.freedesktop.Notifications',member='Notify'" 2>/dev/null |
+while read -r line; do
+    if [[ "$line" =~ ^method\ call.*member=Notify ]]; then
+        # Read the next lines: app_name, replaces_id, app_icon, summary, body
+        read -r app_line   # string "app_name"
+        read -r id_line    # uint32 N
+        read -r icon_line  # string "icon"
+        read -r summary_line
+        read -r body_line
+
+        summary=$(echo "$summary_line" | sed 's/^[[:space:]]*string "//;s/"$//')
+        body=$(echo "$body_line" | sed 's/^[[:space:]]*string "//;s/"$//')
+
+        [[ -z "$summary" ]] && continue
+
+        msg="$summary"
+        [[ -n "$body" ]] && msg="$summary
+$body"
+        herbe "$msg" &
+        paplay /usr/share/sounds/freedesktop/stereo/message.oga 2>/dev/null &
+    fi
+done
