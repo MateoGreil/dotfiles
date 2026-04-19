@@ -1,4 +1,12 @@
 {
+  "statusLine": {
+    "type": "command",
+    "command": "/home/mat/.claude/statusline.sh"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "hooks": {
     "Stop": [
       {
@@ -24,8 +32,5 @@
     "mode": "hold"
   },
   "voiceEnabled": false,
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  }
+  "effortLevel": "xhigh"
 }
