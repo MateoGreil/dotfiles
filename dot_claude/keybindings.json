@@ -7,6 +7,12 @@
       "bindings": {
         "meta+c": "chat:cancel"
       }
+    },
+    {
+      "context": "Help",
+      "bindings": {
+        "meta+c": "help:dismiss"
+      }
     }
   ]
 }
