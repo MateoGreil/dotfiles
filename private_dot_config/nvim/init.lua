@@ -16,6 +16,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
         vim.cmd("terminal claude")
         vim.cmd("file claude")
         vim.cmd("belowright 15split | terminal")
+        vim.cmd("file term0")
         vim.cmd("wincmd k")
       end)
     end
