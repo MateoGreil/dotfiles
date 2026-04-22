@@ -5,13 +5,71 @@
     {
       "context": "Chat",
       "bindings": {
+        "escape": null,
         "meta+c": "chat:cancel"
+      }
+    },
+    {
+      "context": "Autocomplete",
+      "bindings": {
+        "escape": null,
+        "meta+c": "autocomplete:dismiss"
+      }
+    },
+    {
+      "context": "Confirmation",
+      "bindings": {
+        "escape": null,
+        "meta+c": "confirm:no"
+      }
+    },
+    {
+      "context": "Transcript",
+      "bindings": {
+        "escape": null,
+        "meta+c": "transcript:exit"
+      }
+    },
+    {
+      "context": "HistorySearch",
+      "bindings": {
+        "escape": null,
+        "meta+c": "historySearch:accept"
       }
     },
     {
       "context": "Help",
       "bindings": {
+        "escape": null,
         "meta+c": "help:dismiss"
+      }
+    },
+    {
+      "context": "Attachments",
+      "bindings": {
+        "escape": null,
+        "meta+c": "attachments:exit"
+      }
+    },
+    {
+      "context": "Footer",
+      "bindings": {
+        "escape": null,
+        "meta+c": "footer:clearSelection"
+      }
+    },
+    {
+      "context": "DiffDialog",
+      "bindings": {
+        "escape": null,
+        "meta+c": "diff:dismiss"
+      }
+    },
+    {
+      "context": "Select",
+      "bindings": {
+        "escape": null,
+        "meta+c": "select:cancel"
       }
     }
   ]
