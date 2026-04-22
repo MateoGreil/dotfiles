@@ -14,7 +14,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
           end
         end
         vim.cmd("terminal claude")
-        vim.cmd("file claude")
+        vim.cmd("file claudo")
         vim.cmd("belowright 15split | terminal")
         vim.cmd("file term0")
         vim.cmd("wincmd k")
@@ -22,5 +22,8 @@ vim.api.nvim_create_autocmd("VimEnter", {
     end
   end,
 })
+
+vim.cmd("cnoreabbrev claudo terminal claude")
+vim.cmd("cnoreabbrev vibe terminal vibe")
 
 require("config.lazy")
