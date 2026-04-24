@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
             break
           end
         end
-        vim.cmd("terminal claude")
+        vim.cmd("terminal claude --continue || claude")
         vim.cmd("file claudo")
         vim.cmd("belowright 15split | terminal")
         vim.cmd("file term0")
