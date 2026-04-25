@@ -10,6 +10,7 @@
 - One new branch per feature. Create it before starting work; name it descriptively (e.g. `feat/<topic>`, `fix/<topic>`).
 - For large features, split the work into multiple stacked sub-branches (e.g. `feat/<topic>-part-1`, `feat/<topic>-part-2`) — each should open its own PR for incremental review.
 - If the current branch is `main`/`master` when a task starts, create and switch to a new branch before making changes.
+- **Exception — chezmoi dotfiles repo** (`~/.local/share/chezmoi`): commit and push directly to `main`. No branches, no PRs.
 
 ## Opening the PR
 
