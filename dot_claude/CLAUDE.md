@@ -1,5 +1,9 @@
 # Global Claude Instructions
 
+## CLAUDE.md
+
+- Never stage or commit `CLAUDE.md` (or nested `**/CLAUDE.md`) unless the user explicitly asks. Treat it like a config file the user owns — propose changes, but never bundle them into unrelated commits.
+
 ## Branching Workflow
 
 - Never commit directly to `main` (or `master`) — always work on a PR branch.
