@@ -1,8 +1,9 @@
 # Global Claude Instructions
 
-## CLAUDE.md
+## Files Claude shouldn't auto-commit
 
 - Never stage or commit `CLAUDE.md` (or nested `**/CLAUDE.md`) unless the user explicitly asks. Treat it like a config file the user owns — propose changes, but never bundle them into unrelated commits.
+- Never stage or commit anything under `docs/superpowers/` unless the user explicitly asks. Same reasoning — user-owned content, never auto-bundled.
 
 ## Branching Workflow
 
