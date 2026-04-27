@@ -1,5 +1,11 @@
 # Global Claude Instructions
 
+## Security & secret leaks
+
+- Be **extremely careful about leaks**. Never commit, push, paste into PRs/issues, send to third-party tools, or otherwise expose secrets, tokens, API keys, SSH keys, passwords, `.env` values, or anything that could leak private data — even temporarily.
+- Before every commit, scan the staged diff for tokens, credentials, private hostnames, or paths that shouldn't be public.
+- **Rotate-on-sight rule:** if any secret-looking value (API key, token, password, private key, OAuth/JWT, connection string, etc.) appears anywhere in the conversation transcript — pasted by the user, printed by a tool, leaked from a file — immediately stop and tell the user to **rotate that secret now**, even if it was never committed. Treat transcripts as potentially logged.
+
 ## Files Claude shouldn't auto-commit
 
 - Never stage or commit `CLAUDE.md` (or nested `**/CLAUDE.md`) unless the user explicitly asks. Treat it like a config file the user owns — propose changes, but never bundle them into unrelated commits.
