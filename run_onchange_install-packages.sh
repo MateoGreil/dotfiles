@@ -92,6 +92,31 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 echo "✅ Additional applications installed successfully"
 echo ""
 
+# Git forge CLIs section
+echo "================================================"
+echo "🐙 INSTALLING GIT FORGE CLIs (gh, tea)"
+echo "================================================"
+echo "🐙 Installing gh (GitHub CLI)..."
+# https://github.com/cli/cli/blob/trunk/docs/install_linux.md
+sudo install -d -m 0755 /etc/apt/keyrings
+wget -qO- https://cli.github.com/packages/githubcli-archive-keyring.gpg |
+  sudo tee /etc/apt/keyrings/githubcli-archive-keyring.gpg >/dev/null
+sudo chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg
+echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" |
+  sudo tee /etc/apt/sources.list.d/github-cli.list >/dev/null
+sudo apt update -y
+sudo apt install -y gh
+
+echo "🍵 Installing tea (Forgejo/Gitea CLI)..."
+# https://dl.gitea.com/tea/ — bump TEA_VERSION to upgrade
+TEA_VERSION="0.11.0"
+TEA_ARCH=$(dpkg --print-architecture)
+sudo curl -fsSL "https://dl.gitea.com/tea/${TEA_VERSION}/tea-${TEA_VERSION}-linux-${TEA_ARCH}" \
+  -o /usr/local/bin/tea
+sudo chmod +x /usr/local/bin/tea
+echo "✅ Git forge CLIs installed successfully"
+echo ""
+
 # Docker installation section
 echo "================================================"
 echo "🐳 INSTALLING DOCKER"
