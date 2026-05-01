@@ -78,8 +78,32 @@ echo ""
 echo "================================================"
 echo "📦 INSTALLING ADDITIONAL APPLICATIONS"
 echo "================================================"
-echo "🦊 Installing Firefox browser..."
-sudo apt install -y firefox
+echo "🦊 Removing Firefox (replaced by Zen)..."
+sudo snap remove firefox 2>/dev/null || true
+sudo apt remove -y firefox 2>/dev/null || true
+
+echo "🦓 Installing Zen browser..."
+ZEN_TMP=$(mktemp -d)
+curl -fsSL -o "$ZEN_TMP/zen.tar.xz" \
+  https://github.com/zen-browser/desktop/releases/latest/download/zen.linux-x86_64.tar.xz
+sudo rm -rf /opt/zen
+sudo tar -xf "$ZEN_TMP/zen.tar.xz" -C /opt
+sudo ln -sf /opt/zen/zen /usr/local/bin/zen
+sudo tee /usr/share/applications/zen.desktop >/dev/null <<'DESKTOP'
+[Desktop Entry]
+Name=Zen Browser
+GenericName=Web Browser
+Comment=Browse the web with Zen
+Exec=/opt/zen/zen %U
+Icon=/opt/zen/browser/chrome/icons/default/default128.png
+Terminal=false
+Type=Application
+MimeType=text/html;text/xml;application/xhtml+xml;x-scheme-handler/http;x-scheme-handler/https;
+StartupNotify=true
+StartupWMClass=zen
+Categories=Network;WebBrowser;
+DESKTOP
+rm -rf "$ZEN_TMP"
 echo "📝 Installing Neovim text editor..."
 sudo snap install nvim --classic
 echo "🦀 Installing Ghostty terminal..."
