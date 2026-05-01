@@ -153,6 +153,9 @@ echo "🔌 INSTALLING MCP SERVERS"
 echo "================================================"
 echo "🐹 Ensuring Go toolchain is available..."
 sudo apt install -y golang-go
+echo "🔐 Installing age (used by chezmoi for passphrase-based secret encryption)..."
+sudo apt install -y age
+
 echo "🦊 Installing forgejo-mcp via 'go install'..."
 # https://codeberg.org/goern/forgejo-mcp — runs as a Claude Code MCP server.
 # Module path uses the /v2 suffix per its go.mod. GOTOOLCHAIN=auto lets Go
