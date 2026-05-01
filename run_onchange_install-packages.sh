@@ -165,10 +165,12 @@ echo "🔗 Registering forgejo-mcp with Claude Code (user scope)..."
 # ~/.secrets/zshrc_secrets), so it never gets written into ~/.claude.json.
 # Re-runs are idempotent: remove + add re-asserts the desired config.
 if command -v claude >/dev/null 2>&1; then
-  PATH="$HOME/go/bin:$HOME/.local/bin:$PATH"
+  # Use the absolute path to forgejo-mcp: Claude Code spawns MCP children with
+  # a sanitized PATH that doesn't include ~/go/bin, so a bare command would
+  # fail with "No such file or directory".
   claude mcp remove forgejo --scope user >/dev/null 2>&1 || true
   claude mcp add --transport stdio --scope user forgejo -- \
-    forgejo-mcp --transport stdio --url https://git.greil.fr
+    "$HOME/go/bin/forgejo-mcp" --transport stdio --url https://git.greil.fr
 else
   echo "⏭️  claude CLI not found; skipping MCP registration"
 fi
