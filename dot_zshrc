@@ -80,6 +80,11 @@ if [[ -f "$HOME/.secrets/zshrc_secrets" ]]; then
   source "$HOME/.secrets/zshrc_secrets"
 fi
 
+# Add Go-installed binaries (e.g. forgejo-mcp) to PATH.
+if [[ -d "$HOME/go/bin" && ":$PATH:" != *":$HOME/go/bin:"* ]]; then
+  export PATH="$HOME/go/bin:$PATH"
+fi
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment

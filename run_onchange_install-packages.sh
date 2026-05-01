@@ -147,6 +147,21 @@ echo "✅ Docker installation completed successfully"
 echo "🔄 NOTE: You may need to log out and back in for group changes to take effect"
 echo ""
 
+# MCP servers section
+echo "================================================"
+echo "🔌 INSTALLING MCP SERVERS"
+echo "================================================"
+echo "🐹 Ensuring Go toolchain is available..."
+sudo apt install -y golang-go
+echo "🦊 Installing forgejo-mcp via 'go install'..."
+# https://codeberg.org/goern/forgejo-mcp — runs as a Claude Code MCP server.
+# Module path uses the /v2 suffix per its go.mod. GOTOOLCHAIN=auto lets Go
+# fetch a newer toolchain when the project requires one beyond what apt ships.
+# Re-run installs latest; binary lands in ~/go/bin/forgejo-mcp.
+GOTOOLCHAIN=auto go install codeberg.org/goern/forgejo-mcp/v2@latest
+echo "✅ MCP servers installed successfully"
+echo ""
+
 # Final completion message
 echo "================================================"
 echo "📝 INSTALLATION COMPLETED"
