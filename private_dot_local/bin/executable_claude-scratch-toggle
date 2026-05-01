@@ -1,0 +1,22 @@
+#!/bin/sh
+# Toggle the Claude Code scratch window.
+# - First call: spawn ghostty running `claude` with WM_CLASS=claude-scratch in /tmp/claude.
+#   The matching `for_window` rule in i3 sends it to the scratchpad and shows it.
+# - Subsequent calls: toggle visibility via i3's scratchpad.
+
+set -eu
+
+CLASS=dev.mat.ClaudeScratch
+DIR=/tmp/claude
+
+if i3-msg -t get_tree | jq -e --arg c "$CLASS" '.. | objects | select(.window_properties.class? == $c)' >/dev/null 2>&1; then
+    i3-msg "[class=\"$CLASS\"] scratchpad show" >/dev/null
+else
+    mkdir -p "$DIR"
+    exec ghostty \
+        --gtk-single-instance=false \
+        --quit-after-last-window-closed=true \
+        --class="$CLASS" \
+        --working-directory="$DIR" \
+        -e claude
+fi

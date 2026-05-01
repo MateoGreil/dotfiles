@@ -1,0 +1,12 @@
+# Floating "scratch" Claude Code window in /tmp/claude.
+# Super+Shift+A: spawn the window the first time, then toggle hide/show.
+# Logic lives in ~/.local/bin/claude-scratch-toggle to avoid i3 quote-escaping pain.
+
+bindsym $mod+Shift+a exec --no-startup-id ~/.local/bin/claude-scratch-toggle
+
+# First time the window appears: float it, size it (¼ screen), center it,
+# then send it to the scratchpad and immediately show. Subsequent toggles
+# go through `scratchpad show` from the wrapper.
+# Geometry captured from manual placement on a 1920x1080 screen, rounded to 10 px.
+# Adjust the 4 numbers below if you want to nudge size/position.
+for_window [class="dev.mat.ClaudeScratch"] floating enable, sticky enable, resize set 740 px 450 px, move position 1160 px 50 px, move scratchpad, scratchpad show
