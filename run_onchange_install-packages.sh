@@ -159,6 +159,19 @@ echo "🦊 Installing forgejo-mcp via 'go install'..."
 # fetch a newer toolchain when the project requires one beyond what apt ships.
 # Re-run installs latest; binary lands in ~/go/bin/forgejo-mcp.
 GOTOOLCHAIN=auto go install codeberg.org/goern/forgejo-mcp/v2@latest
+
+echo "🔗 Registering forgejo-mcp with Claude Code (user scope)..."
+# Token is read from FORGEJO_ACCESS_TOKEN in the parent shell env (sourced from
+# ~/.secrets/zshrc_secrets), so it never gets written into ~/.claude.json.
+# Re-runs are idempotent: remove + add re-asserts the desired config.
+if command -v claude >/dev/null 2>&1; then
+  PATH="$HOME/go/bin:$HOME/.local/bin:$PATH"
+  claude mcp remove forgejo --scope user >/dev/null 2>&1 || true
+  claude mcp add --transport stdio --scope user forgejo -- \
+    forgejo-mcp --transport stdio --url https://git.greil.fr
+else
+  echo "⏭️  claude CLI not found; skipping MCP registration"
+fi
 echo "✅ MCP servers installed successfully"
 echo ""
 
