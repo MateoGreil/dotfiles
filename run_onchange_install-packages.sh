@@ -156,6 +156,11 @@ sudo apt install -y golang-go
 echo "🔐 Installing age (used by chezmoi for passphrase-based secret encryption)..."
 sudo apt install -y age
 
+echo "🪶 Installing rtk (LLM-token-optimizing CLI proxy)..."
+# https://github.com/rtk-ai/rtk — official installer, downloads pre-built
+# musl binary into ~/.local/bin/rtk. Idempotent: re-runs upgrade in place.
+curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
+
 echo "🦊 Installing forgejo-mcp via 'go install'..."
 # https://codeberg.org/goern/forgejo-mcp — runs as a Claude Code MCP server.
 # Module path uses the /v2 suffix per its go.mod. GOTOOLCHAIN=auto lets Go
