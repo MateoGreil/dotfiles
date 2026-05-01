@@ -26,7 +26,9 @@ Once the feature is implemented, committed, and pushed, open the PR without wait
 - On Forgejo/Gitea remotes:
   - **Preferred:** when the forgejo MCP is loaded (tools matching `mcp__forgejo__*` are available), use `mcp__forgejo__create_pull_request`. Same goes for any other Forgejo work — listing/creating issues, fetching file content, posting comments, etc. Use the matching `mcp__forgejo__*` tools rather than `tea` or curl.
   - **Fallback:** if the MCP isn't loaded (e.g. fresh machine, session predates the MCP registration), use [`tea`](https://dl.gitea.com/tea/): `tea pr create --title "<emoji> <subject>" --description "<body>"`.
-- On GitHub remotes, use `gh pr create --title ... --body ...`.
+- On GitHub remotes:
+  - **Preferred:** when the github MCP is loaded (tools matching `mcp__github__*` are available), use `mcp__github__create_pull_request`. Same for any other GitHub work — issues, PR reviews, file content, comments, workflows, etc. Use the matching `mcp__github__*` tools rather than `gh` or curl.
+  - **Fallback:** if the MCP isn't loaded, use `gh pr create --title ... --body ...`.
 - The **title** must follow the gitmoji rules above (one emoji, imperative, < 60 chars) — generally mirror the main commit subject.
 - The **description** must include:
   - A `## Summary` section with 1–3 bullets explaining *what changed and why* (not a commit-by-commit list).

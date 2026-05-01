@@ -160,6 +160,11 @@ echo "🦊 Installing forgejo-mcp via 'go install'..."
 # Re-run installs latest; binary lands in ~/go/bin/forgejo-mcp.
 GOTOOLCHAIN=auto go install codeberg.org/goern/forgejo-mcp/v2@latest
 
+echo "🐙 Installing github-mcp-server via 'go install'..."
+# https://github.com/github/github-mcp-server — official GitHub MCP server.
+# Main package lives under cmd/github-mcp-server. Binary lands in ~/go/bin.
+GOTOOLCHAIN=auto go install github.com/github/github-mcp-server/cmd/github-mcp-server@latest
+
 echo "🔗 Registering forgejo-mcp with Claude Code (user scope)..."
 # Token is read from FORGEJO_ACCESS_TOKEN in the parent shell env (sourced from
 # ~/.secrets/zshrc_secrets), so it never gets written into ~/.claude.json.
@@ -171,6 +176,9 @@ if command -v claude >/dev/null 2>&1; then
   claude mcp remove forgejo --scope user >/dev/null 2>&1 || true
   claude mcp add --transport stdio --scope user forgejo -- \
     "$HOME/go/bin/forgejo-mcp" --transport stdio --url https://git.greil.fr
+  claude mcp remove github --scope user >/dev/null 2>&1 || true
+  claude mcp add --transport stdio --scope user github -- \
+    "$HOME/go/bin/github-mcp-server" stdio
 else
   echo "⏭️  claude CLI not found; skipping MCP registration"
 fi
