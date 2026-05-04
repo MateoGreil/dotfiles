@@ -110,6 +110,8 @@ echo "🦀 Installing Ghostty terminal..."
 sudo snap install ghostty --classic
 echo "🧰 Installing ripgrep, xclip, fzf..."
 sudo apt install -y ripgrep xclip fzf universal-ctags
+echo "🌱 Installing git..."
+sudo apt install -y git
 echo "💻 Installing omzsh..."
 sudo apt install -y zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
