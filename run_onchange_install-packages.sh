@@ -108,6 +108,8 @@ echo "📝 Installing Neovim text editor..."
 sudo snap install nvim --classic
 echo "🦀 Installing Ghostty terminal..."
 sudo snap install ghostty --classic
+echo "🔐 Installing Bitwarden..."
+sudo snap install bitwarden
 echo "🧰 Installing ripgrep, xclip, fzf..."
 sudo apt install -y ripgrep xclip fzf universal-ctags
 echo "🌱 Installing git..."
