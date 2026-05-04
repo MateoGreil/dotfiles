@@ -38,7 +38,7 @@ UBUNTU_CODENAME=$(lsb_release -sc)
 case $UBUNTU_CODENAME in
 jammy | noble | plucky | questing) ;;
 *)
-  echo "⚠️  WARNING: Ubuntu codename '$UBUNTU_CODENAME' is not officially supported by Regolith 3.3 (known: jammy/noble/plucky/questing) — attempting install anyway"
+  echo "⚠️  WARNING: Ubuntu codename '$UBUNTU_CODENAME' is not officially supported by Regolith 3.4 (known: jammy/noble/plucky/questing) — attempting install anyway"
   ;;
 esac
 
@@ -50,7 +50,7 @@ if [ -n "$UBUNTU_CODENAME" ]; then
     gpg --dearmor | sudo tee /usr/share/keyrings/regolith-archive-keyring.gpg >/dev/null
   echo "📦 Adding Regolith repository..."
   echo "deb [arch=amd64 signed-by=/usr/share/keyrings/regolith-archive-keyring.gpg] \
-        https://archive.regolith-desktop.com/ubuntu/stable $UBUNTU_CODENAME v3.3" |
+        https://archive.regolith-desktop.com/ubuntu/stable $UBUNTU_CODENAME v3.4" |
     sudo tee /etc/apt/sources.list.d/regolith.list
   echo "🔄 Updating package lists..."
   sudo apt update -y
