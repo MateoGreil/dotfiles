@@ -31,13 +31,15 @@ echo "================================================"
 echo "🖥️  INSTALLING REGOLITH DESKTOP"
 echo "================================================"
 # https://regolith-desktop.com/docs/using-regolith/install/
-# Version detection
-UBUNTU_VERSION=$(lsb_release -sr | cut -d. -f1)
-case $UBUNTU_VERSION in
-22) UBUNTU_CODENAME="jammy" ;;
-24) UBUNTU_CODENAME="noble" ;;
-25) UBUNTU_CODENAME="plucky" ;;
-*) echo "⚠️  WARNING: Ubuntu $UBUNTU_VERSION is not officially supported by Regolith (expected 22/24/25)" ;;
+# Detect codename directly so we don't have to map major versions and we
+# pick up new Ubuntu releases (e.g. 25.10 questing, 26.04+) automatically.
+UBUNTU_VERSION=$(lsb_release -sr)
+UBUNTU_CODENAME=$(lsb_release -sc)
+case $UBUNTU_CODENAME in
+jammy | noble | plucky | questing) ;;
+*)
+  echo "⚠️  WARNING: Ubuntu codename '$UBUNTU_CODENAME' is not officially supported by Regolith 3.3 (known: jammy/noble/plucky/questing) — attempting install anyway"
+  ;;
 esac
 
 # Installation process
