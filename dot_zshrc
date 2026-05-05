@@ -85,6 +85,11 @@ if [[ -d "$HOME/go/bin" && ":$PATH:" != *":$HOME/go/bin:"* ]]; then
   export PATH="$HOME/go/bin:$PATH"
 fi
 
+# Add Dev Containers CLI wrapper (bundled Node.js) to PATH.
+if [[ -d "$HOME/.devcontainers/bin" && ":$PATH:" != *":$HOME/.devcontainers/bin:"* ]]; then
+  export PATH="$HOME/.devcontainers/bin:$PATH"
+fi
+
 # export MANPATH="/usr/local/man:$MANPATH"
 
 # You may need to manually set your language environment
