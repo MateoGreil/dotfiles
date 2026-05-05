@@ -3,3 +3,7 @@ regolith.wallpaper.options: zoom
 wm.bar.position: top
 regolith.look.path: /usr/share/regolith-look/gruvbox
 wm.program.terminal: /snap/bin/ghostty
+! Override the look's gtk.theme_name (default "Gruvbox" is the broken
+! regolith-look-gruvbox theme); use the Fausto-Korpsvart port installed by
+! run_onchange_install-packages.sh.
+gtk.theme_name: Gruvbox-Dark
