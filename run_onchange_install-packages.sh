@@ -195,6 +195,22 @@ echo "✅ Docker installation completed successfully"
 echo "🔄 NOTE: You may need to log out and back in for group changes to take effect"
 echo ""
 
+# AI coding CLIs section
+echo "================================================"
+echo "🤖 INSTALLING AI CODING CLIs"
+echo "================================================"
+echo "🟣 Installing Claude Code..."
+# https://claude.ai/install.sh — official installer; idempotent, upgrades in place.
+curl -fsSL https://claude.ai/install.sh | bash
+echo "🌬️  Installing Mistral Vibe..."
+# https://mistral.ai/vibe/install.sh — official installer.
+curl -LsSf https://mistral.ai/vibe/install.sh | bash
+# Both installers drop binaries into ~/.local/bin; ensure later steps see them
+# even though this script runs as sh and didn't source the shell rc files.
+export PATH="$HOME/.local/bin:$PATH"
+echo "✅ AI coding CLIs installed successfully"
+echo ""
+
 # MCP servers section
 echo "================================================"
 echo "🔌 INSTALLING MCP SERVERS"
