@@ -81,9 +81,17 @@ echo "================================================"
 echo "⌨️  CONFIGURING KEYBOARD"
 echo "================================================"
 echo "🔁 Swapping CapsLock and Left Ctrl..."
-# Writes /etc/default/keyboard and applies via systemd-localed
-sudo localectl set-x11-keymap us pc105 "" ctrl:swapcaps
-echo "✅ Keyboard configuration applied"
+# /etc/default/keyboard is the source of truth on Debian/Ubuntu;
+# `localectl set-x11-keymap` is intentionally disabled there.
+KB_FILE=/etc/default/keyboard
+if sudo grep -q '^XKBOPTIONS=' "$KB_FILE" 2>/dev/null; then
+  sudo sed -i 's/^XKBOPTIONS=.*/XKBOPTIONS="ctrl:swapcaps"/' "$KB_FILE"
+else
+  echo 'XKBOPTIONS="ctrl:swapcaps"' | sudo tee -a "$KB_FILE" >/dev/null
+fi
+# Apply to the current X session (no-op under Wayland or no DISPLAY)
+setxkbmap -option ctrl:swapcaps 2>/dev/null || true
+echo "✅ Keyboard configuration applied (full effect after reboot)"
 echo ""
 
 # Additional applications section
