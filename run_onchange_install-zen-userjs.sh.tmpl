@@ -1,0 +1,67 @@
+#!/bin/sh
+
+# IMPORTANT: This script MUST be idempotent as it may be executed multiple times
+# by chezmoi's onChange hook. All operations should be safe to run repeatedly
+# without causing errors or unexpected behavior.
+#
+# The hash line below pulls user.js content into the templated script so chezmoi
+# re-runs this whenever user.js changes (run_onchange tracks rendered script).
+# user.js content hash: {{ include "private_dot_config/zen/user.js" | sha256sum }}
+
+echo "================================================"
+echo "🦊 SYNCING ZEN BROWSER user.js"
+echo "================================================"
+
+ZEN_DIR="$HOME/.config/zen"
+SRC="$ZEN_DIR/user.js"
+
+if [ ! -d "$ZEN_DIR" ]; then
+  echo "📌 Zen Browser not installed (~/.config/zen missing) — skipping"
+  echo ""
+  exit 0
+fi
+
+if [ ! -f "$SRC" ]; then
+  echo "❌ Source user.js not found at $SRC (chezmoi should have placed it)"
+  exit 1
+fi
+
+# Find the active default profile. installs.ini wins because it reflects what
+# the launcher actually opens when there's a per-install lock; profiles.ini's
+# Default=1 can disagree (and does on this machine — it points at an unused
+# "Default Profile" while Zen actually launches "Default (release)").
+PROFILE_REL=""
+if [ -f "$ZEN_DIR/installs.ini" ]; then
+  PROFILE_REL=$(awk -F= '/^Default=/ { sub(/\r$/,"",$2); print $2; exit }' "$ZEN_DIR/installs.ini")
+fi
+if [ -z "$PROFILE_REL" ] && [ -f "$ZEN_DIR/profiles.ini" ]; then
+  PROFILE_REL=$(awk '
+    /^\[Profile/ {
+      if (in_p && def) { print path; done=1; exit }
+      in_p=1; path=""; def=0; next
+    }
+    /^\[/ {
+      if (in_p && def) { print path; done=1; exit }
+      in_p=0; next
+    }
+    in_p && /^Path=/      { sub(/^Path=/,""); sub(/\r$/,""); path=$0 }
+    in_p && /^Default=1$/ { def=1 }
+    END { if (!done && in_p && def) print path }
+  ' "$ZEN_DIR/profiles.ini")
+fi
+
+if [ -z "$PROFILE_REL" ]; then
+  echo "❌ Could not determine default Zen profile — skipping"
+  exit 1
+fi
+
+DST_DIR="$ZEN_DIR/$PROFILE_REL"
+if [ ! -d "$DST_DIR" ]; then
+  echo "❌ Profile directory not found: $DST_DIR"
+  exit 1
+fi
+
+cp -f "$SRC" "$DST_DIR/user.js"
+echo "✅ Synced user.js → $DST_DIR/user.js"
+echo "   (restart Zen to apply)"
+echo ""
