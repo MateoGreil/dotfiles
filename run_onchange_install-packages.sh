@@ -213,6 +213,18 @@ echo "✅ Docker installation completed successfully"
 echo "🔄 NOTE: You may need to log out and back in for group changes to take effect"
 echo ""
 
+# Dev Containers CLI section
+echo "================================================"
+echo "📦 INSTALLING DEV CONTAINERS CLI"
+echo "================================================"
+# https://github.com/devcontainers/cli — official install script, bundles its
+# own Node.js so we don't need a system npm. Installs into ~/.devcontainers
+# with a wrapper at ~/.devcontainers/bin/devcontainer (added to PATH in
+# .zshrc). Idempotent: re-runs upgrade in place.
+curl -fsSL https://raw.githubusercontent.com/devcontainers/cli/main/scripts/install.sh | sh
+echo "✅ Dev Containers CLI installed successfully"
+echo ""
+
 # AI coding CLIs section
 echo "================================================"
 echo "🤖 INSTALLING AI CODING CLIs"
