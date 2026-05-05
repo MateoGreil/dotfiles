@@ -89,9 +89,9 @@ echo "================================================"
 sudo apt install -y sassc git
 GRUVBOX_THEME_TMP=$(mktemp -d)
 git clone --depth 1 https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git "$GRUVBOX_THEME_TMP"
-sudo "$GRUVBOX_THEME_TMP/themes/install.sh" -d /usr/share/themes -c dark
+sudo "$GRUVBOX_THEME_TMP/themes/install.sh" -d /usr/share/themes -c dark --tweaks medium
 rm -rf "$GRUVBOX_THEME_TMP"
-echo "✅ Gruvbox-Dark installed to /usr/share/themes/Gruvbox-Dark"
+echo "✅ Gruvbox-Dark-Medium installed to /usr/share/themes/Gruvbox-Dark-Medium"
 echo ""
 
 # Keyboard tweaks section
