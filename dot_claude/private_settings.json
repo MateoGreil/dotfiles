@@ -1,8 +1,4 @@
 {
-  "statusLine": {
-    "type": "command",
-    "command": "/home/mat/.claude/statusline.sh"
-  },
   "attribution": {
     "commit": "",
     "pr": ""
@@ -18,7 +14,22 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "rtk hook claude"
+          }
+        ]
+      }
     ]
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "/home/mat/.claude/statusline.sh"
   },
   "enabledPlugins": {
     "superpowers@claude-plugins-official": true,
@@ -27,10 +38,10 @@
     "context7@claude-plugins-official": true,
     "security-guidance@claude-plugins-official": true
   },
+  "effortLevel": "xhigh",
   "voice": {
-    "enabled": false,
+    "enabled": true,
     "mode": "hold"
   },
-  "voiceEnabled": false,
-  "effortLevel": "xhigh"
+  "voiceEnabled": true
 }
