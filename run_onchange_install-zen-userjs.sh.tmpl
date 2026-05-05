@@ -4,16 +4,19 @@
 # by chezmoi's onChange hook. All operations should be safe to run repeatedly
 # without causing errors or unexpected behavior.
 #
-# The hash line below pulls user.js content into the templated script so chezmoi
-# re-runs this whenever user.js changes (run_onchange tracks rendered script).
-# user.js content hash: {{ include "private_dot_config/zen/user.js" | sha256sum }}
+# The hash lines below pull source content into the templated script so chezmoi
+# re-runs this whenever user.js or userChrome.css changes (run_onchange tracks
+# the rendered script's content).
+# user.js content hash:        {{ include "private_dot_config/zen/user.js" | sha256sum }}
+# userChrome.css content hash: {{ include "private_dot_config/zen/chrome/userChrome.css" | sha256sum }}
 
 echo "================================================"
 echo "🦊 SYNCING ZEN BROWSER user.js"
 echo "================================================"
 
 ZEN_DIR="$HOME/.config/zen"
-SRC="$ZEN_DIR/user.js"
+SRC_USERJS="$ZEN_DIR/user.js"
+SRC_USERCHROME="$ZEN_DIR/chrome/userChrome.css"
 
 if [ ! -d "$ZEN_DIR" ]; then
   echo "📌 Zen Browser not installed (~/.config/zen missing) — skipping"
@@ -21,8 +24,10 @@ if [ ! -d "$ZEN_DIR" ]; then
   exit 0
 fi
 
-if [ ! -f "$SRC" ]; then
-  echo "❌ Source user.js not found at $SRC (chezmoi should have placed it)"
+if [ ! -f "$SRC_USERJS" ] || [ ! -f "$SRC_USERCHROME" ]; then
+  echo "❌ Sources missing under $ZEN_DIR (chezmoi should have placed them)"
+  echo "   user.js:        $([ -f "$SRC_USERJS" ] && echo OK || echo MISSING)"
+  echo "   userChrome.css: $([ -f "$SRC_USERCHROME" ] && echo OK || echo MISSING)"
   exit 1
 fi
 
@@ -61,7 +66,10 @@ if [ ! -d "$DST_DIR" ]; then
   exit 1
 fi
 
-cp -f "$SRC" "$DST_DIR/user.js"
-echo "✅ Synced user.js → $DST_DIR/user.js"
-echo "   (restart Zen to apply)"
+mkdir -p "$DST_DIR/chrome"
+cp -f "$SRC_USERJS" "$DST_DIR/user.js"
+cp -f "$SRC_USERCHROME" "$DST_DIR/chrome/userChrome.css"
+echo "✅ Synced user.js        → $DST_DIR/user.js"
+echo "✅ Synced userChrome.css → $DST_DIR/chrome/userChrome.css"
+echo "   (fully restart Zen to apply)"
 echo ""

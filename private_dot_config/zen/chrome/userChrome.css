@@ -1,0 +1,15 @@
+/* Managed by chezmoi (private_dot_config/zen/chrome/userChrome.css).
+ * Synced into <profile>/chrome/userChrome.css by run_onchange_install-zen-userjs.sh.tmpl.
+ * Requires toolkit.legacyUserProfileCustomizations.stylesheets=true (set in user.js).
+ */
+
+/* Defeat Zen's 5px floor on the webview inner corner.
+ * zen-theme.css computes:
+ *   --zen-native-inner-radius: var(--zen-webview-border-radius,
+ *     max(5px, calc(var(--zen-border-radius) - var(--zen-element-separation) / 2)));
+ * Defining --zen-webview-border-radius makes the var() short-circuit before
+ * the max(5px, ...) fallback, so 0px actually sticks.
+ */
+:root {
+  --zen-webview-border-radius: 0px;
+}
