@@ -76,6 +76,16 @@ else
 fi
 echo ""
 
+# Keyboard tweaks section
+echo "================================================"
+echo "⌨️  CONFIGURING KEYBOARD"
+echo "================================================"
+echo "🔁 Swapping CapsLock and Left Ctrl..."
+# Writes /etc/default/keyboard and applies via systemd-localed
+sudo localectl set-x11-keymap us pc105 "" ctrl:swapcaps
+echo "✅ Keyboard configuration applied"
+echo ""
+
 # Additional applications section
 echo "================================================"
 echo "📦 INSTALLING ADDITIONAL APPLICATIONS"
