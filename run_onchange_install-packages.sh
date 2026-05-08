@@ -230,15 +230,10 @@ echo "================================================"
 echo "🌱 INSTALLING OPENTOFU"
 echo "================================================"
 # https://opentofu.org/docs/intro/install/deb/ — official helper that adds the
-# OpenTofu apt repo and installs the `tofu` binary. Idempotent: re-runs upgrade
-# in place via apt.
-TOFU_TMP=$(mktemp -d)
-curl --proto '=https' --tlsv1.2 -fsSL \
-  https://get.opentofu.org/install-opentofu.sh \
-  -o "$TOFU_TMP/install-opentofu.sh"
-chmod +x "$TOFU_TMP/install-opentofu.sh"
-"$TOFU_TMP/install-opentofu.sh" --install-method deb
-rm -rf "$TOFU_TMP"
+# OpenTofu apt repo and installs the `tofu` binary. Piped to sh so it runs
+# even when /tmp is mounted noexec. Idempotent: re-runs upgrade via apt.
+curl --proto '=https' --tlsv1.2 -fsSL https://get.opentofu.org/install-opentofu.sh |
+  sh -s -- --install-method deb
 echo "✅ OpenTofu installed successfully"
 echo ""
 
