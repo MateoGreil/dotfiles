@@ -1,0 +1,81 @@
+#!/bin/sh
+# Toggle gruvbox dark <-> light locally, without touching chezmoi sources.
+# `chezmoi apply` will reset to dark (the canonical default in this repo) —
+# that's intentional. This script only edits the live destination files and
+# the ~/.config/theme-mode sentinel that nvim's colorscheme.lua reads.
+
+set -eu
+
+SENTINEL="$HOME/.config/theme-mode"
+CURRENT="dark"
+if [ -r "$SENTINEL" ]; then
+    CURRENT=$(tr -d '[:space:]' < "$SENTINEL")
+fi
+case "$CURRENT" in
+    dark|light) ;;
+    *) CURRENT="dark" ;;
+esac
+
+if [ "$CURRENT" = "dark" ]; then
+    NEW="light"
+    OLD_GTK_THEME="Gruvbox-Dark-Medium"
+    NEW_GTK_THEME="Gruvbox-Light-Medium"
+    OLD_GHOSTTY="Gruvbox Material Dark"
+    NEW_GHOSTTY="Gruvbox Material Light"
+    NEW_PREFER_DARK="false"
+else
+    NEW="dark"
+    OLD_GTK_THEME="Gruvbox-Light-Medium"
+    NEW_GTK_THEME="Gruvbox-Dark-Medium"
+    OLD_GHOSTTY="Gruvbox Material Light"
+    NEW_GHOSTTY="Gruvbox Material Dark"
+    NEW_PREFER_DARK="true"
+fi
+
+if ! [ -d "/usr/share/themes/$NEW_GTK_THEME" ]; then
+    echo "❌ /usr/share/themes/$NEW_GTK_THEME not installed."
+    echo "   Run: chezmoi apply  (re-runs run_onchange_install-packages.sh)"
+    exit 1
+fi
+
+mkdir -p "$(dirname "$SENTINEL")"
+printf '%s\n' "$NEW" > "$SENTINEL"
+
+echo "🎨 theme: $CURRENT → $NEW"
+
+# Edit live files in place. Each sed is idempotent for this direction; if a
+# file was already partially flipped (e.g. mid-edit), running the script again
+# from a known sentinel state corrects it.
+for f in "$HOME/.config/gtk-3.0/settings.ini" "$HOME/.config/gtk-4.0/settings.ini"; do
+    [ -w "$f" ] || continue
+    sed -i \
+        -e "s|$OLD_GTK_THEME|$NEW_GTK_THEME|g" \
+        -e "s|^gtk-application-prefer-dark-theme=.*|gtk-application-prefer-dark-theme=$NEW_PREFER_DARK|" \
+        "$f"
+done
+
+XRES="$HOME/.config/regolith3/Xresources"
+if [ -w "$XRES" ]; then
+    sed -i "s|$OLD_GTK_THEME|$NEW_GTK_THEME|g" "$XRES"
+fi
+
+GHOSTTY_CFG="$HOME/.config/ghostty/config.ghostty"
+if [ -w "$GHOSTTY_CFG" ]; then
+    sed -i "s|$OLD_GHOSTTY|$NEW_GHOSTTY|g" "$GHOSTTY_CFG"
+fi
+
+# Push Xresources into the live X server (regolith xsettings reads gtk.theme_name).
+if command -v xrdb >/dev/null 2>&1; then
+    xrdb -merge "$XRES" 2>/dev/null || true
+fi
+if command -v regolith-look >/dev/null 2>&1; then
+    regolith-look refresh >/dev/null 2>&1 || true
+fi
+
+# Hot-reload running ghostty instances.
+if pgrep -x ghostty >/dev/null 2>&1; then
+    pkill -USR2 -x ghostty 2>/dev/null || true
+fi
+
+echo "✅ $NEW applied. In open nvim: :ThemeReload (GTK apps re-read on next launch)."
+echo "ℹ️  chezmoi apply will reset to dark — that's the repo's default."

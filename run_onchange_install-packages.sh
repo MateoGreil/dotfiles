@@ -84,14 +84,16 @@ echo "================================================"
 # CSS uses pre-GTK-3.20 selectors and renders as default-light on GTK 3.24,
 # so apps like ilia don't actually pick up gruvbox colors. Install the
 # Fausto-Korpsvart port (https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme)
-# alongside it as Gruvbox-Dark; the user-level gtk settings.ini and Xresources
-# point GTK at this one. Idempotent: install.sh removes target dirs first.
+# alongside it as Gruvbox-Dark and Gruvbox-Light; the user-level gtk
+# settings.ini and Xresources point GTK at one of these, and the switch-theme
+# script flips between them. Idempotent: install.sh removes target dirs first.
 sudo apt install -y sassc git
 GRUVBOX_THEME_TMP=$(mktemp -d)
 git clone --depth 1 https://github.com/Fausto-Korpsvart/Gruvbox-GTK-Theme.git "$GRUVBOX_THEME_TMP"
 sudo "$GRUVBOX_THEME_TMP/themes/install.sh" -d /usr/share/themes -c dark --tweaks medium
+sudo "$GRUVBOX_THEME_TMP/themes/install.sh" -d /usr/share/themes -c light --tweaks medium
 rm -rf "$GRUVBOX_THEME_TMP"
-echo "✅ Gruvbox-Dark-Medium installed to /usr/share/themes/Gruvbox-Dark-Medium"
+echo "✅ Gruvbox-{Dark,Light}-Medium installed to /usr/share/themes/"
 echo ""
 
 # Keyboard tweaks section
