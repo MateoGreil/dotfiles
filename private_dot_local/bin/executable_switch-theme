@@ -57,6 +57,47 @@ done
 XRES="$HOME/.config/regolith3/Xresources"
 if [ -w "$XRES" ]; then
     sed -i "s|$OLD_GTK_THEME|$NEW_GTK_THEME|g" "$XRES"
+
+    # Strip any previous light-mode bar override block (idempotent).
+    sed -i '/^! BEGIN switch-theme-light$/,/^! END switch-theme-light$/d' "$XRES"
+
+    # In light mode, append overrides for the gruvbox regolith look's bar +
+    # i3 client colors. The look's wm/i3xrocks files are loaded first; values
+    # set after them in the user's Xresources win the xrdb merge.
+    if [ "$NEW" = "light" ]; then
+        cat >> "$XRES" <<'EOF'
+! BEGIN switch-theme-light
+wm.bar.background.color: #ebdbb2
+wm.bar.statusline.color: #3c3836
+wm.bar.workspace.focused.border.color: #d5c4a1
+wm.bar.workspace.focused.background.color: #d5c4a1
+wm.bar.workspace.focused.text.color: #3c3836
+wm.bar.workspace.active.border.color: #d5c4a1
+wm.bar.workspace.active.background.color: #d5c4a1
+wm.bar.workspace.active.text.color: #665c54
+wm.bar.workspace.inactive.border.color: #ebdbb2
+wm.bar.workspace.inactive.background.color: #ebdbb2
+wm.bar.workspace.inactive.text.color: #665c54
+wm.client.focused.color.border: #ebdbb2
+wm.client.focused.color.background: #bdae93
+wm.client.focused.color.text: #282828
+wm.client.focused.color.indicator: #458588
+wm.client.focused.color.child_border: #bdae93
+wm.client.focused_inactive.color.border: #ebdbb2
+wm.client.focused_inactive.color.background: #d5c4a1
+wm.client.focused_inactive.color.text: #665c54
+wm.client.focused_inactive.color.indicator: #d5c4a1
+wm.client.focused_inactive.color.child_border: #ebdbb2
+wm.client.unfocused.color.border: #ebdbb2
+wm.client.unfocused.color.background: #d5c4a1
+wm.client.unfocused.color.text: #665c54
+wm.client.unfocused.color.indicator: #d5c4a1
+wm.client.unfocused.color.child_border: #ebdbb2
+i3xrocks.label.color: #665c54
+i3xrocks.value.color: #3c3836
+! END switch-theme-light
+EOF
+    fi
 fi
 
 GHOSTTY_CFG="$HOME/.config/ghostty/config.ghostty"
