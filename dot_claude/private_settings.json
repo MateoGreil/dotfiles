@@ -36,12 +36,29 @@
     "claude-md-management@claude-plugins-official": true,
     "claude-code-setup@claude-plugins-official": true,
     "context7@claude-plugins-official": true,
-    "security-guidance@claude-plugins-official": true
+    "security-guidance@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "product-engineering@electra-plugins": true,
+    "product-engineering-experiments@electra-plugins": true,
+    "product-engineering-golang@electra-plugins": true
+  },
+  "extraKnownMarketplaces": {
+    "electra-plugins": {
+      "source": {
+        "source": "github",
+        "repo": "Go-Electra/claude-plugins"
+      },
+      "autoUpdate": true
+    }
   },
   "effortLevel": "xhigh",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
-  "voiceEnabled": true
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark",
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true,
+  "skipAutoPermissionPrompt": true
 }
