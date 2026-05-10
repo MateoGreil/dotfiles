@@ -11,6 +11,29 @@
 - Never stage or commit `CLAUDE.md` (or nested `**/CLAUDE.md`) unless the user explicitly asks. Treat it like a config file the user owns — propose changes, but never bundle them into unrelated commits.
 - Never stage or commit anything under `docs/superpowers/` unless the user explicitly asks. Same reasoning — user-owned content, never auto-bundled.
 
+## Editor — Neovim
+
+The user works in Neovim (LazyVim) and typically launches Claude Code from inside an nvim `:terminal`. When Claude is a child of nvim, the parent's RPC socket path is exposed in the `$NVIM` env var (e.g. `/run/user/1000/nvim.<PID>.0`). If `$NVIM` is empty, scan `$XDG_RUNTIME_DIR/nvim.*.0` and ask the user which to target if multiple match.
+
+**Hand-off rule** — anything the user would copy out of chat (file contents, long snippets, scripts, configs, generated text) **does not go in the chat**. Write it to a real file — a chezmoi source path, an existing project file, or `/tmp/scratch-<topic>.<ext>` for ephemeral output — and open that file in the user's nvim via the RPC socket. The chat is for conversation and short reasoning, not as a clipboard.
+
+```sh
+# Open a file in a vertical split (most common)
+nvim --server "$NVIM" --remote-send '<C-\><C-n>:vsplit /abs/path<CR>'
+
+# Horizontal split / new tab
+nvim --server "$NVIM" --remote-send '<C-\><C-n>:split /abs/path<CR>'
+nvim --server "$NVIM" --remote-send '<C-\><C-n>:tabnew /abs/path<CR>'
+
+# Run an Ex or user command (e.g. :ThemeReload)
+nvim --server "$NVIM" --remote-send ':SomeCommand<CR>'
+
+# Evaluate Vimscript and capture the result
+nvim --server "$NVIM" --remote-expr 'expand("%:p")'
+```
+
+After opening, just tell the user what you opened and where — not the content. Inline code in chat is still fine for ≤5-line examples that are part of an explanation.
+
 ## Branching Workflow
 
 - Never commit directly to `main` (or `master`) — always work on a PR branch.
