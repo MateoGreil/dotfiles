@@ -12,8 +12,11 @@ map("n", "<C-h>", "<cmd>vertical resize +2<cr>", { desc = "Increase Window Width
 -- Copy path file to clipboard
 map("n", ",cs", ':let @+=expand("%")<CR>', { desc = "Copy file path to clipboard" })
 map("n", ",cl", ':let @+=expand("%:p")<CR>', { desc = "Copy absolute file path to clipboard" })
--- Exit terminal mode with a single ESC press
-map("t", "<Esc>", "<C-\\><C-n>", { desc = "Go to normal mode from terminal" })
+-- Exit terminal mode with a fast double-ESC. A single ESC falls through to
+-- the terminal process (so apps inside :term still receive Escape). The
+-- TermEnter/TermLeave autocmds in config/autocmds.lua drop timeoutlen while
+-- a terminal buffer has focus so the wait between the two presses is short.
+map("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Go to normal mode from terminal" })
 -- Open current file in a new tab
 map("n", "<C-w>f", ":tabe %<CR>", { noremap = true, silent = true, desc = "Open current file in a new tab" })
 
