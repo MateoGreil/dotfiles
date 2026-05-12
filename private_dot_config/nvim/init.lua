@@ -13,17 +13,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
             break
           end
         end
-        vim.cmd("terminal claude --continue || claude")
-        vim.cmd("file claudo")
-        vim.cmd("belowright 15split | terminal")
-        vim.cmd("file term0")
-        vim.cmd("wincmd k")
+        vim.cmd("ClaudeCode --resume")
       end)
     end
   end,
 })
 
-vim.cmd("cnoreabbrev claudo terminal claude")
 vim.cmd("cnoreabbrev vibe terminal vibe")
 
 require("config.lazy")
