@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
             break
           end
         end
-        vim.cmd("ClaudeCode --resume")
+        vim.cmd("ClaudeCode --continue")
       end)
     end
   end,
