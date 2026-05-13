@@ -3,3 +3,4 @@ gtk-titlebar = false
 gtk-wide-tabs = false
 window-decoration = none
 theme = Gruvbox Material Dark
+mouse-scroll-multiplier = precision:0.3
