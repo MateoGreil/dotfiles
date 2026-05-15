@@ -53,6 +53,7 @@ local function open_here(cmd_string, env_table, config, focus)
   current_window_provider._bufnr = vim.api.nvim_get_current_buf()
   current_window_provider._jobid = jobid
   vim.bo[current_window_provider._bufnr].bufhidden = "hide"
+  pcall(vim.api.nvim_buf_set_name, current_window_provider._bufnr, "claude")
   if focus ~= false then
     vim.cmd("startinsert")
   end
