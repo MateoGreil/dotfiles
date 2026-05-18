@@ -25,6 +25,28 @@
           }
         ]
       }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.message' | xargs -I{} notify-send -u normal 'Claude' '{}' 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_name' | xargs -I{} notify-send -u critical 'Claude — permission needed' 'Wants to use {}' 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
     ]
   },
   "statusLine": {
