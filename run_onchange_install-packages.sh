@@ -160,6 +160,22 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 echo "✅ Additional applications installed successfully"
 echo ""
 
+# Herbe notification daemon section
+echo "================================================"
+echo "🌿 INSTALLING HERBE (notification daemon)"
+echo "================================================"
+# https://github.com/dudik/herbe — minimal X11 notification daemon, not in apt.
+# Used by ~/.local/bin/herbe-notifications which sniffs D-Bus Notify calls and
+# pipes them to herbe. Build from source into /usr/local/bin. Idempotent:
+# always rebuilds from latest master and overwrites the binary.
+sudo apt install -y libx11-dev libxft-dev libxinerama-dev make gcc
+HERBE_TMP=$(mktemp -d)
+git clone --depth 1 https://github.com/dudik/herbe.git "$HERBE_TMP"
+sudo make -C "$HERBE_TMP" clean install
+rm -rf "$HERBE_TMP"
+echo "✅ Herbe installed to /usr/local/bin/herbe"
+echo ""
+
 # Git forge CLIs section
 echo "================================================"
 echo "🐙 INSTALLING GIT FORGE CLIs (gh, tea)"
