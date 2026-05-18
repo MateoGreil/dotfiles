@@ -13,7 +13,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
             break
           end
         end
-        vim.cmd("ClaudeCode --continue")
+        vim.cmd("ClaudeCode agents --cwd .")
       end)
     end
   end,
