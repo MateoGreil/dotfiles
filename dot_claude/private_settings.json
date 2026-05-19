@@ -80,6 +80,7 @@
   },
   "skipDangerousModePermissionPrompt": true,
   "theme": "dark",
+  "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
   "voiceEnabled": true,
   "skipAutoPermissionPrompt": true
