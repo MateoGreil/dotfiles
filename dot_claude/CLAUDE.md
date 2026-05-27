@@ -42,6 +42,14 @@ After opening, just tell the user what you opened and where — not the content.
 - If the current branch is `main`/`master` when a task starts, create and switch to a new branch before making changes.
 - **Exception — chezmoi dotfiles repo** (`~/.local/share/chezmoi`): commit and push directly to `main`. No branches, no PRs.
 
+## Worktrees — always isolate agent work
+
+- **Before making any code changes, always work in a git worktree.** This prevents conflicts when multiple agents (background jobs, parallel sessions, subagents) touch the same repo at the same time, and keeps the user's working copy untouched.
+- Use the `EnterWorktree` tool when available (it creates and switches into an isolated worktree). If it isn't available, fall back to `git worktree add ../<repo>-<branch> -b <branch>` and `cd` into that path before editing.
+- **Skip the worktree only when:** the task is read-only (search, questions, explaining code), your cwd is already under `.claude/worktrees/`, or you're in the chezmoi dotfiles repo (which has its own commit-to-main exception).
+- If `EnterWorktree` fails for any reason, report the failure to the user and continue in place — don't silently work around it.
+- When done, hand the branch off via PR as usual; the worktree itself can be cleaned up with `ExitWorktree` or `git worktree remove`.
+
 ## Opening the PR
 
 Once the feature is implemented, committed, and pushed, open the PR without waiting to be asked again:
