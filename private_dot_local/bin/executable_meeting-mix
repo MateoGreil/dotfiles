@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+# meeting-mix — virtual "meeting_mix" microphone for Notion (native PipeWire, no pactl)
+#
+# Builds a null-sink bus "meeting_mix" and mixes into it, via two pw-loopback streams:
+#   - your default microphone      -> your voice
+#   - the monitor of your default sink -> the other call participants
+# Notion/Firefox can then record the "Monitor of MeetingMix" source.
+#
+# Your default mic is NOT modified: Meet/Zoom/Teams keep using it (no echo loop).
+# Only Notion selects "Monitor of MeetingMix".
+#
+# Devices are AUTODETECTED at start (no hardware IDs hardcoded):
+#   mic   = default source    (override: MEETING_MIX_MIC=<node.name>)
+#   sink  = default sink       (override: MEETING_MIX_SINK=<node.name>), its monitor is captured
+#   loopback latency in ms     (override: MEETING_MIX_LATENCY=20)
+#
+# Usage: meeting-mix {start|stop|restart|status}
+
+set -u
+
+MIX="meeting_mix"
+LATENCY="${MEETING_MIX_LATENCY:-20}"   # ms
+
+# node.name for a wpctl id/selector (e.g. @DEFAULT_AUDIO_SINK@)
+_nodename() { wpctl inspect "$1" 2>/dev/null | awk -F'"' '/node\.name = /{print $2; exit}'; }
+
+mic_node()  { echo "${MEETING_MIX_MIC:-$(_nodename @DEFAULT_AUDIO_SOURCE@)}"; }
+sink_node() { echo "${MEETING_MIX_SINK:-$(_nodename @DEFAULT_AUDIO_SINK@)}"; }
+
+# Global PipeWire id of the bus (empty if it does not exist)
+bus_id() {
+  pw-cli ls Node 2>/dev/null | awk '
+    $1=="id" { gid=$2; sub(",","",gid) }
+    /node\.name = "'"$MIX"'"/ { print gid; exit }
+  '
+}
+
+start() {
+  local mic sink
+  mic="$(mic_node)"; sink="$(sink_node)"
+  if [ -z "$mic" ] || [ -z "$sink" ]; then
+    echo "✗ could not detect default mic/sink (is PipeWire ready?)"; exit 1
+  fi
+  if [ "$mic" = "$MIX" ] || [ "$sink" = "$MIX" ]; then
+    echo "✗ refusing: the default already points at $MIX (loop risk). Change your default, then retry."; exit 1
+  fi
+
+  # 1) null-sink bus (idempotent; object.linger=true => survives pw-cli exit)
+  if [ -z "$(bus_id)" ]; then
+    pw-cli create-node adapter \
+      "{ factory.name=support.null-audio-sink node.name=$MIX node.description=MeetingMix media.class=Audio/Sink object.linger=true audio.position=[FL FR] }" >/dev/null
+    echo "• bus $MIX created"
+  else
+    echo "• bus $MIX already present (id $(bus_id))"
+  fi
+
+  # 2) loopback mic -> bus
+  if ! pgrep -f -- "--name mix_mic" >/dev/null; then
+    setsid pw-loopback --latency "$LATENCY" --name mix_mic \
+      -C "$mic" -P "$MIX" </dev/null >/dev/null 2>&1 &
+    echo "• mic loopback started      ($mic)"
+  else
+    echo "• mic loopback already running"
+  fi
+
+  # 3) loopback sink monitor -> bus
+  if ! pgrep -f -- "--name mix_sysmon" >/dev/null; then
+    setsid pw-loopback --latency "$LATENCY" --name mix_sysmon \
+      --capture-props="stream.capture.sink=true target.object=$sink" \
+      -P "$MIX" </dev/null >/dev/null 2>&1 &
+    echo "• monitor loopback started  ($sink)"
+  else
+    echo "• monitor loopback already running"
+  fi
+
+  # 4) remind if the default mic is muted
+  if wpctl status 2>/dev/null | grep -qiE '\*.*MUTED'; then
+    echo "⚠ your default mic is MUTED — unmute it: wpctl set-mute @DEFAULT_AUDIO_SOURCE@ 0"
+  fi
+  echo "→ In Notion/Firefox, pick the \"Monitor of MeetingMix\" microphone."
+}
+
+stop() {
+  pkill -f -- "--name mix_mic"    2>/dev/null && echo "• mic loopback stopped"     || true
+  pkill -f -- "--name mix_sysmon" 2>/dev/null && echo "• monitor loopback stopped" || true
+  local id; id="$(bus_id)"
+  if [ -n "$id" ]; then
+    pw-cli destroy "$id" >/dev/null 2>&1 && echo "• bus $MIX (id $id) destroyed" || true
+  fi
+}
+
+status() {
+  local id; id="$(bus_id)"
+  echo "Bus $MIX        : ${id:-absent}"
+  echo "Detected mic     : $(mic_node)"
+  echo "Monitored sink   : $(sink_node)"
+  pgrep -af pw-loopback 2>/dev/null | grep -E 'mix_mic|mix_sysmon' || echo "(no mix loopback running)"
+}
+
+case "${1:-}" in
+  start)   start ;;
+  stop)    stop ;;
+  restart) stop; start ;;
+  status)  status ;;
+  *) echo "usage: $0 {start|stop|restart|status}"; exit 1 ;;
+esac

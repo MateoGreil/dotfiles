@@ -1,0 +1,15 @@
+[Unit]
+Description=Virtual meeting_mix microphone (mic + system audio -> Notion)
+Documentation=man:pw-loopback(1)
+After=pipewire.service pipewire-pulse.service wireplumber.service
+Wants=pipewire.service wireplumber.service
+PartOf=pipewire.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=%h/.local/bin/meeting-mix start
+ExecStop=%h/.local/bin/meeting-mix stop
+
+[Install]
+WantedBy=default.target
