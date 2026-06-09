@@ -1,0 +1,5 @@
+# QWERTY US + Compose key (Right Alt) for typing accents — é è ê ç à etc.
+# Usage: tap Right Alt, release, then a sequence — e.g. ' e -> é, ` e -> è, , c -> ç.
+# exec_always re-asserts it on every i3 start/reload so it survives login;
+# Regolith otherwise resets the keyboard to ctrl:swapcaps alone. Caps<->Ctrl kept.
+exec_always --no-startup-id setxkbmap us -option "" -option ctrl:swapcaps -option compose:ralt
