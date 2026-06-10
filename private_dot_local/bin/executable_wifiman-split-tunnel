@@ -1,0 +1,104 @@
+#!/bin/bash
+# wifiman-split-tunnel — make WiFiman Desktop's Teleport VPN split-tunnel.
+#
+# WiFiman Teleport generates an ephemeral WireGuard config with
+# AllowedIPs = 0.0.0.0/0, so its bundled wg-quick hijacks ALL traffic
+# through the tunnel. This script patches that wg-quick (at its marked
+# "function override insertion point") to override add_default(): instead
+# of installing the catch-all policy routes, it only routes the subnets
+# listed in /etc/wifiman-split-tunnel.networks through the tunnel.
+#
+# Usage:  sudo wifiman-split-tunnel            # install / re-apply patch
+#         sudo wifiman-split-tunnel --revert   # remove the patch
+#
+# Note: a wifiman-desktop package upgrade replaces wg-quick — just re-run
+# this script afterwards. Reconnect Teleport for changes to take effect.
+
+set -euo pipefail
+
+WG_QUICK=/usr/lib/wifiman-desktop/wg-quick
+NETWORKS_FILE=/etc/wifiman-split-tunnel.networks
+MARKER_BEGIN='# >>> wifiman-split-tunnel >>>'
+MARKER_END='# <<< wifiman-split-tunnel <<<'
+INSERTION_POINT='# ~~ function override insertion point ~~'
+
+[[ $EUID -eq 0 ]] || { echo "run me with sudo" >&2; exit 1; }
+[[ -f $WG_QUICK ]] || { echo "$WG_QUICK not found — is wifiman-desktop installed?" >&2; exit 1; }
+
+if [[ ${1:-} == --revert ]]; then
+    if grep -qF "$MARKER_BEGIN" "$WG_QUICK"; then
+        sed -i "\|^$MARKER_BEGIN\$|,\|^$MARKER_END\$|d" "$WG_QUICK"
+        echo "patch removed from $WG_QUICK ($NETWORKS_FILE left in place)"
+    else
+        echo "nothing to revert: $WG_QUICK is not patched"
+    fi
+    exit 0
+fi
+
+# Default subnets: remote LAN + remote console/DNS network (10.200.1.1 is
+# the DNS server Teleport pushes; it must stay reachable through the tunnel).
+if [[ ! -e $NETWORKS_FILE ]]; then
+    cat > "$NETWORKS_FILE" <<'EOF'
+# Subnets routed through the WiFiman Teleport tunnel (one CIDR per line).
+# Everything NOT listed here keeps using your normal internet connection.
+# Edit freely; changes apply on the next Teleport (re)connect.
+192.168.2.0/24
+10.200.1.0/24
+EOF
+    echo "created $NETWORKS_FILE (edit it to adjust routed subnets)"
+fi
+
+if grep -qF "$MARKER_BEGIN" "$WG_QUICK"; then
+    echo "$WG_QUICK already patched — nothing to do"
+    exit 0
+fi
+
+grep -qF "$INSERTION_POINT" "$WG_QUICK" || {
+    echo "insertion point not found in $WG_QUICK (app update changed the script?)" >&2
+    exit 1
+}
+
+cp -a "$WG_QUICK" "$WG_QUICK.orig"
+
+OVERRIDE=$(cat <<'EOF'
+# >>> wifiman-split-tunnel >>>
+# Managed by ~/.local/bin/wifiman-split-tunnel — do not edit in place.
+# Replaces the catch-all default route with per-subnet routes from
+# /etc/wifiman-split-tunnel.networks.
+add_default() {
+	local line net proto
+	if [[ ! -s /etc/wifiman-split-tunnel.networks ]]; then
+		echo "[!] split-tunnel: /etc/wifiman-split-tunnel.networks missing or empty; not routing $1" >&2
+		return 0
+	fi
+	while read -r line; do
+		net="${line%%#*}"
+		net="${net//[[:space:]]/}"
+		[[ -n $net ]] || continue
+		if [[ $1 == *:* ]]; then
+			[[ $net == *:* ]] || continue
+			proto=-6
+		else
+			[[ $net != *:* ]] || continue
+			proto=-4
+		fi
+		cmd ip $proto route replace "$net" dev "$INTERFACE"
+	done < /etc/wifiman-split-tunnel.networks
+	return 0
+}
+# <<< wifiman-split-tunnel <<<
+EOF
+)
+
+awk -v marker="$INSERTION_POINT" -v override="$OVERRIDE" '
+    { print }
+    $0 == marker { print override }
+' "$WG_QUICK.orig" > "$WG_QUICK.tmp"
+chmod --reference="$WG_QUICK.orig" "$WG_QUICK.tmp"
+mv "$WG_QUICK.tmp" "$WG_QUICK"
+bash -n "$WG_QUICK"
+
+echo "patched $WG_QUICK (backup: $WG_QUICK.orig)"
+echo "→ reconnect Teleport in WiFiman, then check:"
+echo "    ip route get 1.1.1.1        # must stay on your wifi/ethernet"
+echo "    ip route get 192.168.2.1    # must go via the tunnel interface"
