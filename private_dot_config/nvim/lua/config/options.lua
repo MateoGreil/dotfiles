@@ -4,3 +4,7 @@
 
 -- Set colorcolumn to 120
 vim.opt.colorcolumn = "120"
+
+-- Set the terminal window title to the current file/directory
+vim.opt.title = true
+vim.opt.titlestring = "%t — nvim"
