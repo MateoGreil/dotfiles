@@ -13,6 +13,12 @@ vim.api.nvim_create_autocmd("VimEnter", {
             break
           end
         end
+        -- hidden terminal buffer named "term0", available via :b term0
+        local term_buf = vim.api.nvim_create_buf(true, false)
+        vim.api.nvim_buf_call(term_buf, function()
+          vim.fn.jobstart(vim.o.shell, { term = true })
+        end)
+        vim.api.nvim_buf_set_name(term_buf, "term0")
         vim.cmd("ClaudeCode agents --cwd .")
       end)
     end
