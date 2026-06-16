@@ -26,5 +26,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
 })
 
 vim.cmd("cnoreabbrev vibe terminal vibe")
+vim.cmd("cnoreabbrev tuicr terminal tuicr")
 
 require("config.lazy")
