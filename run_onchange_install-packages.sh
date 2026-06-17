@@ -268,6 +268,16 @@ curl -LsSf https://mistral.ai/vibe/install.sh | bash
 # Both installers drop binaries into ~/.local/bin; ensure later steps see them
 # even though this script runs as sh and didn't source the shell rc files.
 export PATH="$HOME/.local/bin:$PATH"
+echo "🧩 Installing Matt Pocock's agent skills (used by pi via ~/.pi/agent/settings.json)..."
+# https://github.com/mattpocock/skills — agent skill collection. pi loads the
+# engineering/productivity/misc/personal subdirs from this checkout. Idempotent:
+# clone once, otherwise fast-forward pull.
+MATTPOCOCK_SKILLS_DIR="$HOME/.local/share/mattpocock-skills"
+if [ -d "$MATTPOCOCK_SKILLS_DIR/.git" ]; then
+  git -C "$MATTPOCOCK_SKILLS_DIR" pull --ff-only || true
+else
+  git clone --depth 1 https://github.com/mattpocock/skills "$MATTPOCOCK_SKILLS_DIR" || true
+fi
 echo "✅ AI coding CLIs installed successfully"
 echo ""
 

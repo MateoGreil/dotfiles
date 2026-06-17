@@ -3,5 +3,11 @@
   "theme": "gruvbox-material-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
-  "defaultThinkingLevel": "medium"
+  "defaultThinkingLevel": "medium",
+  "skills": [
+    "~/.local/share/mattpocock-skills/skills/engineering",
+    "~/.local/share/mattpocock-skills/skills/productivity",
+    "~/.local/share/mattpocock-skills/skills/misc",
+    "~/.local/share/mattpocock-skills/skills/personal"
+  ]
 }
