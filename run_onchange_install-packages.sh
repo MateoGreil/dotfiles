@@ -277,6 +277,10 @@ rm -f "$PI_INSTALLER"
 # Both installers drop binaries into ~/.local/bin; ensure later steps see them
 # even though this script runs as sh and didn't source the shell rc files.
 export PATH="$HOME/.local/bin:$PATH"
+echo "🌐 Installing pi-web-access package..."
+# https://www.npmjs.com/package/pi-web-access — pi package giving the agent
+# web access. Idempotent: pi install upgrades in place.
+pi install npm:pi-web-access || true
 echo "🧩 Installing Matt Pocock's agent skills (used by pi via ~/.pi/agent/settings.json)..."
 # https://github.com/mattpocock/skills — agent skill collection. pi loads the
 # engineering/productivity/misc/personal subdirs from this checkout. Idempotent:
