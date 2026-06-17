@@ -281,6 +281,10 @@ echo "🌐 Installing pi-web-access package..."
 # https://www.npmjs.com/package/pi-web-access — pi package giving the agent
 # web access. Idempotent: pi install upgrades in place.
 pi install npm:pi-web-access || true
+echo "❓ Installing rpiv-ask-user-question package..."
+# https://www.npmjs.com/package/@juicesharp/rpiv-ask-user-question — pi package
+# letting the agent ask the user a question. Idempotent: pi install upgrades in place.
+pi install npm:@juicesharp/rpiv-ask-user-question || true
 echo "🧩 Installing Matt Pocock's agent skills (used by pi via ~/.pi/agent/settings.json)..."
 # https://github.com/mattpocock/skills — agent skill collection. pi loads the
 # engineering/productivity/misc/personal subdirs from this checkout. Idempotent:
