@@ -3,7 +3,6 @@
     "commit": "",
     "pr": ""
   },
-  "model": "claude-fable-5[1m]",
   "permissions": {
     "defaultMode": "auto"
   },
@@ -87,6 +86,9 @@
     }
   },
   "effortLevel": "xhigh",
+  "enableWorkflows": true,
+  "ultracode": true,
+  "skipWorkflowUsageWarning": true,
   "voice": {
     "enabled": true,
     "mode": "hold"
