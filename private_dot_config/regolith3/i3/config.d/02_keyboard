@@ -1,5 +1,11 @@
 # QWERTY US + Compose key (Right Alt) for typing accents — é è ê ç à etc.
 # Usage: tap Right Alt, release, then a sequence — e.g. ' e -> é, ` e -> è, , c -> ç.
-# exec_always re-asserts it on every i3 start/reload so it survives login;
-# Regolith otherwise resets the keyboard to ctrl:swapcaps alone. Caps<->Ctrl kept.
-exec_always --no-startup-id setxkbmap us -option "" -option ctrl:swapcaps -option compose:ralt
+#
+# We set GNOME's xkb-options (dconf) rather than calling setxkbmap directly:
+# Regolith/GNOME re-applies its own keyboard settings after i3 starts (login,
+# resume, settings change) and would clobber a bare setxkbmap, dropping
+# compose:ralt and leaving only ctrl:swapcaps. Writing the gsettings key makes
+# GNOME itself carry the Compose option, so it sticks across re-applications and
+# boots. exec_always re-asserts it (and triggers an immediate re-apply) on every
+# i3 start/reload. Caps<->Ctrl swap kept.
+exec_always --no-startup-id gsettings set org.gnome.desktop.input-sources xkb-options "['ctrl:swapcaps', 'compose:ralt']"
