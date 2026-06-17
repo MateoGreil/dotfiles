@@ -19,7 +19,9 @@ vim.api.nvim_create_autocmd("VimEnter", {
           vim.fn.jobstart(vim.o.shell, { term = true })
         end)
         vim.api.nvim_buf_set_name(term_buf, "term0")
-        vim.cmd("ClaudeCode agents --cwd .")
+        vim.cmd("terminal pi")
+        pcall(vim.api.nvim_buf_set_name, vim.api.nvim_get_current_buf(), "pi")
+        vim.cmd("startinsert")
       end)
     end
   end,
