@@ -20,7 +20,7 @@ vim.api.nvim_create_autocmd("VimEnter", {
         end)
         vim.api.nvim_buf_set_name(term_buf, "term0")
         vim.cmd("terminal claude agents --cwd=.")
-        pcall(vim.api.nvim_buf_set_name, vim.api.nvim_get_current_buf(), "pi")
+        pcall(vim.api.nvim_buf_set_name, vim.api.nvim_get_current_buf(), "claude")
         vim.cmd("startinsert")
       end)
     end
