@@ -3,7 +3,7 @@ gtk-titlebar = false
 gtk-wide-tabs = false
 window-decoration = none
 theme = Gruvbox Material Dark
-mouse-scroll-multiplier = precision:0.3
+mouse-scroll-multiplier = precision:1.5,discrete:3
 
 # Always open new windows/tabs/splits at $HOME. By default Ghostty inherits
 # the focused surface's cwd, so terminals would otherwise reuse the last dir.
