@@ -277,28 +277,24 @@ rm -f "$PI_INSTALLER"
 # Both installers drop binaries into ~/.local/bin; ensure later steps see them
 # even though this script runs as sh and didn't source the shell rc files.
 export PATH="$HOME/.local/bin:$PATH"
-echo "🌐 Installing pi-web-access package..."
-# https://www.npmjs.com/package/pi-web-access — pi package giving the agent
-# web access. Idempotent: pi install upgrades in place.
-pi install npm:pi-web-access || true
-echo "❓ Installing rpiv-ask-user-question package..."
-# https://www.npmjs.com/package/@juicesharp/rpiv-ask-user-question — pi package
-# letting the agent ask the user a question. Idempotent: pi install upgrades in place.
+echo "🧩 Installing pi packages..."
+# pi packages (idempotent: pi install upgrades in place):
+#   @juicesharp/rpiv-ask-user-question — ask the user a question
+#   @tintinweb/pi-subagents            — subagent support
+#   pi-mcp-adapter                     — MCP server support
+#   @juicesharp/rpiv-todo              — todo tool
+#   @the-forge-flow/pi-rules           — auto-load path-scoped rules from .claude/rules & .pi/rules
+#   git:mattpocock/skills              — Matt Pocock's agent skill collection (engineering/productivity/misc/personal)
 pi install npm:@juicesharp/rpiv-ask-user-question || true
-echo "🤖 Installing pi-subagents package..."
-# https://www.npmjs.com/package/@tintinweb/pi-subagents — pi package adding
-# subagent support. Idempotent: pi install upgrades in place.
 pi install npm:@tintinweb/pi-subagents || true
-echo "🧩 Installing Matt Pocock's agent skills (used by pi via ~/.pi/agent/settings.json)..."
-# https://github.com/mattpocock/skills — agent skill collection. pi loads the
-# engineering/productivity/misc/personal subdirs from this checkout. Idempotent:
-# clone once, otherwise fast-forward pull.
-MATTPOCOCK_SKILLS_DIR="$HOME/.local/share/mattpocock-skills"
-if [ -d "$MATTPOCOCK_SKILLS_DIR/.git" ]; then
-  git -C "$MATTPOCOCK_SKILLS_DIR" pull --ff-only || true
-else
-  git clone --depth 1 https://github.com/mattpocock/skills "$MATTPOCOCK_SKILLS_DIR" || true
-fi
+pi install npm:pi-mcp-adapter || true
+pi install npm:@juicesharp/rpiv-todo || true
+pi install npm:@the-forge-flow/pi-rules || true
+# https://github.com/mattpocock/skills — agent skill collection, installed as a
+# pi git package. pi recursively discovers the SKILL.md folders under skills/.
+# Tracks main (no pinned ref); 'pi update' pulls latest and pi flags updates at
+# startup. Idempotent: pi install reconciles an existing clone.
+pi install git:github.com/mattpocock/skills || true
 echo "✅ AI coding CLIs installed successfully"
 echo ""
 

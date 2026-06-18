@@ -4,10 +4,13 @@
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
   "defaultThinkingLevel": "medium",
-  "skills": [
-    "~/.local/share/mattpocock-skills/skills/engineering",
-    "~/.local/share/mattpocock-skills/skills/productivity",
-    "~/.local/share/mattpocock-skills/skills/misc",
-    "~/.local/share/mattpocock-skills/skills/personal"
+  "editorPaddingX": 1,
+  "packages": [
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:@tintinweb/pi-subagents",
+    "npm:pi-mcp-adapter",
+    "npm:@juicesharp/rpiv-todo",
+    "npm:@the-forge-flow/pi-rules",
+    "git:github.com/mattpocock/skills"
   ]
 }
