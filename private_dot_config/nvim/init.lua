@@ -30,4 +30,17 @@ vim.api.nvim_create_autocmd("VimEnter", {
 vim.cmd("cnoreabbrev vibe terminal vibe")
 vim.cmd("cnoreabbrev tuicr terminal tuicr")
 
+-- :pi -> open a terminal running `pi`, with the buffer named "pi" (like claude
+-- above). `:terminal pi` swallows the rest of the line, so the rename can't be
+-- chained after it; do it as a user command. pcall guards against E95 if a "pi"
+-- buffer already exists.
+vim.api.nvim_create_user_command("Pi", function()
+  vim.cmd("terminal pi")
+  pcall(vim.api.nvim_buf_set_name, vim.api.nvim_get_current_buf(), "pi")
+  vim.cmd("startinsert")
+end, { desc = "Open a terminal running pi (buffer named 'pi')" })
+-- Let `:pi` resolve to :Pi, but only when the whole cmdline is exactly "pi"
+-- (so paths/args containing "pi" aren't rewritten).
+vim.cmd([[cnoreabbrev <expr> pi getcmdtype() ==# ':' && getcmdline() ==# 'pi' ? 'Pi' : 'pi']])
+
 require("config.lazy")
