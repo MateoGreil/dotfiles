@@ -35,7 +35,7 @@ vim.api.nvim_create_autocmd("User", {
           vim.cmd("startinsert")
         end,
         pi = function()
-          vim.cmd("terminal pi")
+          vim.cmd("terminal pi /agent-board")
           pcall(vim.api.nvim_buf_set_name, vim.api.nvim_get_current_buf(), "pi")
           vim.cmd("startinsert")
         end,
