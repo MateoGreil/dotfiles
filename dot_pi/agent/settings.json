@@ -1,16 +1,24 @@
 {
-  "lastChangelogVersion": "0.79.6",
+  "lastChangelogVersion": "0.79.8",
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
   "defaultThinkingLevel": "medium",
   "editorPaddingX": 1,
+  "skills": [
+    "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering/skills",
+    "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering-experiments/skills",
+    "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering-golang/skills"
+  ],
   "packages": [
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@tintinweb/pi-subagents",
     "npm:pi-mcp-adapter",
     "npm:@juicesharp/rpiv-todo",
     "npm:@the-forge-flow/pi-rules",
-    "git:github.com/mattpocock/skills"
+    "git:github.com/mattpocock/skills",
+    "git:github.com/Go-Electra/claude-plugins",
+    "npm:pi-nvim",
+    "npm:pi-agent-board"
   ]
 }
