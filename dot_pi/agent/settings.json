@@ -14,7 +14,6 @@
     "npm:@juicesharp/rpiv-ask-user-question",
     "npm:@tintinweb/pi-subagents",
     "npm:pi-mcp-adapter",
-    "npm:@juicesharp/rpiv-todo",
     "npm:@the-forge-flow/pi-rules",
     "git:github.com/mattpocock/skills",
     "git:github.com/Go-Electra/claude-plugins",

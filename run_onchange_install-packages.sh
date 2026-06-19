@@ -282,13 +282,11 @@ echo "🧩 Installing pi packages..."
 #   @juicesharp/rpiv-ask-user-question — ask the user a question
 #   @tintinweb/pi-subagents            — subagent support
 #   pi-mcp-adapter                     — MCP server support
-#   @juicesharp/rpiv-todo              — todo tool
 #   @the-forge-flow/pi-rules           — auto-load path-scoped rules from .claude/rules & .pi/rules
 #   git:mattpocock/skills              — Matt Pocock's agent skill collection (engineering/productivity/misc/personal)
 pi install npm:@juicesharp/rpiv-ask-user-question || true
 pi install npm:@tintinweb/pi-subagents || true
 pi install npm:pi-mcp-adapter || true
-pi install npm:@juicesharp/rpiv-todo || true
 pi install npm:@the-forge-flow/pi-rules || true
 # https://github.com/mattpocock/skills — agent skill collection, installed as a
 # pi git package. pi recursively discovers the SKILL.md folders under skills/.
