@@ -1,6 +1,6 @@
 #!/bin/sh
-# Toggle the Claude Code scratch window.
-# - First call: spawn ghostty running `claude` with WM_CLASS=claude-scratch in /tmp/claude.
+# Toggle the pi scratch window.
+# - First call: spawn ghostty running `pi` with WM_CLASS=dev.mat.ClaudeScratch in /tmp/claude.
 #   The matching `for_window` rule in i3 sends it to the scratchpad and shows it.
 # - Subsequent calls: toggle visibility via i3's scratchpad.
 
@@ -13,10 +13,14 @@ if i3-msg -t get_tree | jq -e --arg c "$CLASS" '.. | objects | select(.window_pr
     i3-msg "[class=\"$CLASS\"] scratchpad show" >/dev/null
 else
     mkdir -p "$DIR"
+    # ghostty -e runs the command directly (no login shell), so pi's bin dir
+    # isn't on PATH yet. Prepend the stable pi-node bin (also holds node, which
+    # pi's `#!/usr/bin/env node` shebang needs).
+    export PATH="$HOME/.local/share/pi-node/current/bin:$PATH"
     exec ghostty \
         --gtk-single-instance=false \
         --quit-after-last-window-closed=true \
         --class="$CLASS" \
         --working-directory="$DIR" \
-        -e claude
+        -e pi
 fi
