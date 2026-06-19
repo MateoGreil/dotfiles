@@ -5,7 +5,14 @@
     {
       "context": "Chat",
       "bindings": {
-        "escape": null
+        "escape": null,
+        "ctrl+shift+c": "chat:stash"
+      }
+    },
+    {
+      "context": "Scroll",
+      "bindings": {
+        "ctrl+shift+c": null
       }
     }
   ]
