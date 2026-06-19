@@ -298,6 +298,25 @@ pi install git:github.com/mattpocock/skills || true
 echo "✅ AI coding CLIs installed successfully"
 echo ""
 
+# Gitmoji CLI section
+echo "================================================"
+echo "😜 INSTALLING GITMOJI CLI"
+echo "================================================"
+# https://github.com/carloscuesta/gitmoji-cli — interactive gitmoji commit
+# helper (`gitmoji -c`, `gitmoji --hook`). Distributed only via npm, so reuse
+# the Node bundle pi installed above rather than pulling in a system Node.
+# Install with --prefix ~/.local so the `gitmoji` bin lands in ~/.local/bin
+# (already on PATH from the export above) and survives pi Node-bundle upgrades.
+# Idempotent: npm i -g upgrades in place.
+PI_NODE_BIN=$(ls -d "$HOME"/.local/share/pi-node/node-*/bin 2>/dev/null | head -1)
+if [ -n "$PI_NODE_BIN" ]; then
+  PATH="$PI_NODE_BIN:$PATH" npm install -g --prefix "$HOME/.local" gitmoji-cli
+  echo "✅ gitmoji-cli installed to ~/.local/bin/gitmoji"
+else
+  echo "⏭️  pi-node not found; skipping gitmoji-cli install"
+fi
+echo ""
+
 # MCP servers section
 echo "================================================"
 echo "🔌 INSTALLING MCP SERVERS"
