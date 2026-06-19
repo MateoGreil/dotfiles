@@ -303,18 +303,13 @@ echo "================================================"
 echo "😜 INSTALLING GITMOJI CLI"
 echo "================================================"
 # https://github.com/carloscuesta/gitmoji-cli — interactive gitmoji commit
-# helper (`gitmoji -c`, `gitmoji --hook`). Distributed only via npm, so reuse
-# the Node bundle pi installed above rather than pulling in a system Node.
-# Install with --prefix ~/.local so the `gitmoji` bin lands in ~/.local/bin
-# (already on PATH from the export above) and survives pi Node-bundle upgrades.
-# Idempotent: npm i -g upgrades in place.
-PI_NODE_BIN=$(ls -d "$HOME"/.local/share/pi-node/node-*/bin 2>/dev/null | head -1)
-if [ -n "$PI_NODE_BIN" ]; then
-  PATH="$PI_NODE_BIN:$PATH" npm install -g --prefix "$HOME/.local" gitmoji-cli
-  echo "✅ gitmoji-cli installed to ~/.local/bin/gitmoji"
-else
-  echo "⏭️  pi-node not found; skipping gitmoji-cli install"
-fi
+# helper (`gitmoji -c`, `gitmoji --hook`). Distributed only via npm and needs
+# Node >=18, so pull Node/npm from apt and install it globally. `sudo npm`
+# resolves via sudo's secure_path to /usr/bin/npm, so the `gitmoji` bin lands in
+# /usr/local/bin (on PATH). Idempotent: apt and npm i -g both upgrade in place.
+sudo apt install -y nodejs npm
+sudo npm install -g gitmoji-cli
+echo "✅ gitmoji-cli installed to /usr/local/bin/gitmoji"
 echo ""
 
 # MCP servers section
