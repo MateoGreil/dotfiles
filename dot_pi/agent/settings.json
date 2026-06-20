@@ -18,6 +18,7 @@
     "git:github.com/Go-Electra/claude-plugins",
     "npm:pi-nvim",
     "npm:pi-agent-board",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "https://github.com/obra/superpowers"
   ]
 }
