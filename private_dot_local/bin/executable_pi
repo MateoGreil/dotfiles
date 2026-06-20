@@ -1,0 +1,26 @@
+#!/bin/sh
+# pi wrapper: give each project its own agent-board store.
+#
+# Each git repo (or, outside a repo, each directory) gets its own board under
+# ~/.pi/agent/boards, named <dir>-<pathhash> so same-named folders never
+# collide. A pre-set AGENT_BOARD_ROOT is respected (child agents inherit it;
+# `AGENT_BOARD_ROOT=~/.pi/agent/agent-board pi` reaches the global board).
+#
+# This is a wrapper script — not a zsh function — so it also applies when pi is
+# launched from a non-interactive shell that doesn't source ~/.zshrc (e.g.
+# nvim's `:terminal pi`, which runs `zsh -c "pi ..."`).
+#
+# pi's launcher is `#!/usr/bin/env node`, so we must put pi's bundled Node
+# (v22) ahead on PATH — otherwise contexts like nvim's terminal resolve `node`
+# to an older system node (v18) and pi crashes on modern JS syntax.
+dir="$HOME/.local/share/pi-node/current/bin"
+PATH="$dir:$PATH"
+export PATH
+
+if [ -z "${AGENT_BOARD_ROOT:-}" ]; then
+	d="$(git rev-parse --show-toplevel 2>/dev/null || pwd)"
+	AGENT_BOARD_ROOT="$HOME/.pi/agent/boards/$(basename "$d")-$(printf '%s' "$d" | cksum | cut -d' ' -f1)"
+	export AGENT_BOARD_ROOT
+fi
+
+exec "$dir/pi" "$@"
