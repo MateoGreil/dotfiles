@@ -1,0 +1,5 @@
+# pi agent-board runtime state — never manage these (rosters, views, sessions,
+# launch-prefs, per-project boards created by the `pi` wrapper). They are
+# regenerated at runtime and would constantly drift / get clobbered by apply.
+.pi/agent/agent-board
+.pi/agent/boards
