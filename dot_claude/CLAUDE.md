@@ -58,8 +58,8 @@ Once the feature is implemented, committed, and pushed, open the PR without wait
   - **Preferred:** when the forgejo MCP is loaded (tools matching `mcp__forgejo__*` are available), use `mcp__forgejo__create_pull_request`. Same goes for any other Forgejo work — listing/creating issues, fetching file content, posting comments, etc. Use the matching `mcp__forgejo__*` tools rather than `tea` or curl.
   - **Fallback:** if the MCP isn't loaded (e.g. fresh machine, session predates the MCP registration), use [`tea`](https://dl.gitea.com/tea/): `tea pr create --title "<emoji> <subject>" --description "<body>"`.
 - On GitHub remotes:
-  - **Preferred:** when the github MCP is loaded (tools matching `mcp__github__*` are available), use `mcp__github__create_pull_request`. Same for any other GitHub work — issues, PR reviews, file content, comments, workflows, etc. Use the matching `mcp__github__*` tools rather than `gh` or curl.
-  - **Fallback:** if the MCP isn't loaded, use `gh pr create --title ... --body ...`.
+  - **Preferred:** use the `gh` CLI: `gh pr create --title "<emoji> <subject>" --body "<body>"`. Same for any other GitHub work — issues, PR reviews, file content, comments, workflows, etc. Use `gh` rather than the github MCP. (The github MCP doesn't work on my work/enterprise GitHub setup, so don't reach for `mcp__github__*` tools first.)
+  - **Fallback:** only if `gh` is unavailable and the github MCP is loaded (tools matching `mcp__github__*`), use `mcp__github__create_pull_request` and the matching `mcp__github__*` tools.
 - The **title** must follow the gitmoji rules above (one emoji, imperative, < 60 chars) — generally mirror the main commit subject.
 - The **description** must include:
   - A `## Summary` section with 1–3 bullets explaining *what changed and why* (not a commit-by-commit list).
