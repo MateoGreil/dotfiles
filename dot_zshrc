@@ -125,3 +125,7 @@ export PATH="/home/mat/.local/share/pi-node/node-v22.22.3-linux-x64/bin:$PATH"
 # ~/.local/bin holds a `pi` wrapper that scopes the agent-board per project; it
 # must win over pi-node's own `pi`, so keep it ahead on PATH.
 export PATH="$HOME/.local/bin:$PATH"
+
+# pi-agent-board
+export AGENT_BOARD_SUMMARY_MODEL="anthropic/claude-haiku-4-5" # for row summaries
+export AGENT_BOARD_TITLE_MODEL="anthropic/claude-haiku-4-5" # for session titles
