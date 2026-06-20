@@ -3,7 +3,7 @@
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
-  "defaultThinkingLevel": "medium",
+  "defaultThinkingLevel": "xhigh",
   "editorPaddingX": 1,
   "skills": [
     "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering/skills",
