@@ -118,3 +118,18 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="nvim"
 alias vimgolf="docker run --rm -it -e \"key=$VIMGOLF_KEY\" ghcr.io/filbranden/vimgolf"
+eval "$(~/.local/bin/mise activate zsh)"
+
+# Pi
+export PATH="/home/mat/.local/share/pi-node/node-v22.22.3-linux-x64/bin:$PATH"
+
+# Give pi a per-project agent-board: each git repo (or, outside a repo, each dir)
+# gets its own board under ~/.pi/agent/boards, named <dir>-<pathhash> so
+# same-named folders never collide. A pre-set AGENT_BOARD_ROOT is respected
+# (child agents inherit it; `AGENT_BOARD_ROOT=~/.pi/agent/agent-board pi` reaches
+# the global board).
+pi() {
+  if [[ -n "$AGENT_BOARD_ROOT" ]]; then command pi "$@"; return; fi
+  local d="$(command git rev-parse --show-toplevel 2>/dev/null || pwd)"
+  AGENT_BOARD_ROOT="$HOME/.pi/agent/boards/${d##*/}-$(printf '%s' "$d" | cksum | cut -d' ' -f1)" command pi "$@"
+}
