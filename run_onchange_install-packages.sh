@@ -265,15 +265,21 @@ curl -fsSL https://claude.ai/install.sh | bash
 echo "🌬️  Installing Mistral Vibe..."
 # https://mistral.ai/vibe/install.sh — official installer.
 curl -LsSf https://mistral.ai/vibe/install.sh | bash
-echo "🥧 Installing pi (coding agent)..."
 # https://pi.dev/install.sh — official installer. Downloaded to a file first
 # (not piped to sh) so the content is reviewable. Self-contained Node bundle
-# lands in ~/.local/share/pi-node with a wrapper on PATH. Idempotent: upgrades
-# in place.
-PI_INSTALLER="$(mktemp)"
-curl -fsSL https://pi.dev/install.sh -o "$PI_INSTALLER"
-sh "$PI_INSTALLER"
-rm -f "$PI_INSTALLER"
+# lands in ~/.local/share/pi-node with a wrapper on PATH. Skipped entirely when
+# pi is already present: the installer prompts interactively to reinstall, which
+# would block this non-interactive run_onchange script. Run 'pi update' to
+# upgrade an existing install.
+if command -v pi >/dev/null 2>&1; then
+  echo "⏭️  pi already installed; skipping (run 'pi update' to upgrade)"
+else
+  echo "🥧 Installing pi (coding agent)..."
+  PI_INSTALLER="$(mktemp)"
+  curl -fsSL https://pi.dev/install.sh -o "$PI_INSTALLER"
+  sh "$PI_INSTALLER"
+  rm -f "$PI_INSTALLER"
+fi
 # Both installers drop binaries into ~/.local/bin; ensure later steps see them
 # even though this script runs as sh and didn't source the shell rc files.
 export PATH="$HOME/.local/bin:$PATH"
