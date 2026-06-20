@@ -22,6 +22,8 @@ map("n", "<C-w>f", ":tabe %<CR>", { noremap = true, silent = true, desc = "Open 
 
 -- Telescope
 local telescope = require("telescope.builtin")
-map("n", ":Rg", telescope.live_grep, { desc = "Telescope live grep" })
+map("n", ":Rg", function()
+  require("telescope").extensions.live_grep_args.live_grep_args()
+end, { desc = "Telescope live grep (args)" })
 map("n", "<C-p>", telescope.find_files, { desc = "Telescope find files" })
 map("n", "<C-b>", telescope.buffers, { desc = "Telescope buffers" })
