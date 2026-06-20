@@ -36,28 +36,7 @@ vim.api.nvim_create_autocmd("User", {
         end,
         pi = function()
           vim.cmd("terminal pi /agent-board")
-          local buf = vim.api.nvim_get_current_buf()
-          pcall(vim.api.nvim_buf_set_name, buf, "pi")
-          -- Scope the agent board to the project we opened: once the board
-          -- overlay is up, drive its live filter with `/<dirname>`. The board
-          -- only enters filter mode on an exact "/" keypress, so send `/`, the
-          -- term, then Enter as separate chunks (and after a delay, so the
-          -- overlay is mounted -- landing late just delays the filter, landing
-          -- early would type into pi's prompt instead).
-          local dir = vim.fn.fnamemodify(arg, ":p"):gsub("/$", "")
-          local name = vim.fn.fnamemodify(dir, ":t")
-          local chan = vim.b[buf].terminal_job_id
-          if chan and name ~= "" then
-            vim.defer_fn(function()
-              vim.fn.chansend(chan, "/")
-              vim.defer_fn(function()
-                vim.fn.chansend(chan, name)
-                vim.defer_fn(function()
-                  vim.fn.chansend(chan, "\r")
-                end, 40)
-              end, 60)
-            end, 2000)
-          end
+          pcall(vim.api.nvim_buf_set_name, vim.api.nvim_get_current_buf(), "pi")
           vim.cmd("startinsert")
         end,
       }
