@@ -1,10 +1,11 @@
 {
-  "lastChangelogVersion": "0.79.8",
+  "lastChangelogVersion": "0.79.9",
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
   "defaultThinkingLevel": "xhigh",
   "editorPaddingX": 1,
+  "steeringMode": "all",
   "skills": [
     "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering/skills",
     "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering-experiments/skills",
@@ -20,5 +21,12 @@
     "npm:pi-agent-board",
     "npm:pi-web-access",
     "https://github.com/obra/superpowers"
-  ]
+  ],
+  "compaction": {
+    "enabled": true
+  },
+  "showHardwareCursor": false,
+  "quietStartup": true,
+  "httpIdleTimeoutMs": 120000,
+  "enableInstallTelemetry": false
 }
