@@ -328,6 +328,11 @@ echo "🪶 Installing rtk (LLM-token-optimizing CLI proxy)..."
 # musl binary into ~/.local/bin/rtk. Idempotent: re-runs upgrade in place.
 curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/install.sh | sh
 
+# Wire rtk into the coding agents so their bash commands get rewritten to the
+# token-optimized rtk equivalents. Idempotent: rtk init regenerates in place.
+rtk init -g # Claude Code
+rtk init -g --agent pi # Pi
+
 echo "🦊 Installing forgejo-mcp via 'go install'..."
 # https://codeberg.org/goern/forgejo-mcp — runs as a Claude Code MCP server.
 # Module path uses the /v2 suffix per its go.mod. GOTOOLCHAIN=auto lets Go
