@@ -10,6 +10,10 @@ Installed & authenticated locally — reach for these instead of an MCP.
 
 (Configured MCP servers are discoverable at runtime via the `mcp` tool, so they're not listed here.)
 
+## Git worktrees
+
+Always work in a dedicated **git worktree** rather than directly in the main checkout, so multiple agents running in parallel don't step on each other (conflicting edits, half-applied changes, racing on the same branch). One worktree per task. (A repo's own `AGENTS.md` may override this — e.g. the chezmoi dotfiles repo forbids worktrees.)
+
 ## Code comments
 
 Do **not** add comments to code unless explicitly asked. Write self-explanatory code (clear names, small functions) instead of explaining it with comments. Only add a comment when the user explicitly requests one, or to preserve an existing comment that's still relevant.
