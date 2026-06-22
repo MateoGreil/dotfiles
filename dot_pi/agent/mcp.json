@@ -4,10 +4,6 @@
       "type": "http",
       "url": "https://mcp.notion.com/mcp"
     },
-    "slack": {
-      "type": "http",
-      "url": "https://mcp.slack.com/mcp"
-    },
     "electra-pe-core": {
       "type": "http",
       "url": "https://pe-core-mcp.go-electra.com/mcp"
