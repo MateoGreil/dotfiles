@@ -9,6 +9,7 @@ Installed & authenticated locally — reach for these instead of an MCP.
 - **Salesforce / Sitetracker** → `sf` CLI
 - **Terraform** → `terraform` CLI
 - **OpenTofu** → `tofu` CLI
+- **Google Workspace** (Drive, Sheets, Gmail, Calendar, Docs, Slides, Meet) → `gws` CLI
 
 (Configured MCP servers are discoverable at runtime via the `mcp` tool, so they're not listed here.)
 
