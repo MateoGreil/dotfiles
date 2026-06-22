@@ -27,6 +27,6 @@
   },
   "showHardwareCursor": false,
   "quietStartup": true,
-  "httpIdleTimeoutMs": 120000,
+  "httpIdleTimeoutMs": 30000,
   "enableInstallTelemetry": false
 }
