@@ -20,7 +20,8 @@
     "npm:pi-nvim",
     "npm:pi-agent-board",
     "npm:pi-web-access",
-    "https://github.com/obra/superpowers"
+    "https://github.com/obra/superpowers",
+    "npm:pi-notify-agent"
   ],
   "compaction": {
     "enabled": true
@@ -28,5 +29,6 @@
   "showHardwareCursor": false,
   "quietStartup": true,
   "httpIdleTimeoutMs": 60000,
-  "enableInstallTelemetry": false
+  "enableInstallTelemetry": false,
+  "hideThinkingBlock": true
 }
