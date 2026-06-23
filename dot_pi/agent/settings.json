@@ -21,7 +21,7 @@
     "npm:pi-agent-board",
     "npm:pi-web-access",
     "https://github.com/obra/superpowers",
-    "npm:pi-notify-agent"
+    "npm:pi-notifi"
   ],
   "compaction": {
     "enabled": true
