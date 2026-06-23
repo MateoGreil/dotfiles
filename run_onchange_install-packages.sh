@@ -275,10 +275,7 @@ if command -v pi >/dev/null 2>&1; then
   echo "⏭️  pi already installed; skipping (run 'pi update' to upgrade)"
 else
   echo "🥧 Installing pi (coding agent)..."
-  PI_INSTALLER="$(mktemp)"
-  curl -fsSL https://pi.dev/install.sh -o "$PI_INSTALLER"
-  sh "$PI_INSTALLER"
-  rm -f "$PI_INSTALLER"
+  curl -fsSL https://pi.dev/install.sh | sh
 fi
 # Both installers drop binaries into ~/.local/bin; ensure later steps see them
 # even though this script runs as sh and didn't source the shell rc files.
@@ -297,6 +294,7 @@ pi install npm:@the-forge-flow/pi-rules || true
 # Tracks main (no pinned ref); 'pi update' pulls latest and pi flags updates at
 # startup. Idempotent: pi install reconciles an existing clone.
 pi install git:github.com/mattpocock/skills || true
+curl -fsSL tuicr.dev/install.sh | sh
 echo "✅ AI coding CLIs installed successfully"
 echo ""
 
@@ -330,7 +328,7 @@ curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/instal
 
 # Wire rtk into the coding agents so their bash commands get rewritten to the
 # token-optimized rtk equivalents. Idempotent: rtk init regenerates in place.
-rtk init -g # Claude Code
+rtk init -g            # Claude Code
 rtk init -g --agent pi # Pi
 
 echo "🦊 Installing forgejo-mcp via 'go install'..."
