@@ -1,0 +1,30 @@
+#!/bin/sh
+# pi-sync-agents: symlink subagents shipped by an installed Claude-plugin repo
+# into pi's global agents dir, so the `Agent` tool discovers them.
+#
+# pi-subagents only scans ~/.pi/agent/agents/*.md and .pi/agents/*.md; it does
+# not descend into installed package repos. This re-asserts one symlink per
+# agent .md found under each plugin's agents/ dir, and prunes links that now
+# dangle (agent removed/renamed upstream). Idempotent — safe on every run.
+set -eu
+
+repo="${PI_CLAUDE_PLUGINS_REPO:-$HOME/.pi/agent/git/github.com/Go-Electra/claude-plugins}"
+dest="${PI_CODING_AGENT_DIR:-$HOME/.pi/agent}/agents"
+
+mkdir -p "$dest"
+
+for link in "$dest"/*.md; do
+	[ -L "$link" ] || continue
+	case "$(readlink "$link")" in
+		"$repo"/*) [ -e "$link" ] || rm -f "$link" ;;
+	esac
+done
+
+count=0
+for src in "$repo"/plugins/*/agents/*.md; do
+	[ -e "$src" ] || continue
+	ln -sfn "$src" "$dest/$(basename "$src")"
+	count=$((count + 1))
+done
+
+echo "pi-sync-agents: linked $count agent(s) into $dest"

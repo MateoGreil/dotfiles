@@ -23,4 +23,14 @@ if [ -z "${AGENT_BOARD_ROOT:-}" ]; then
 	export AGENT_BOARD_ROOT
 fi
 
+# `pi update` refreshes installed package repos; afterwards re-assert the
+# symlinked subagents those repos ship into pi's global agents dir. Can't
+# `exec` here since we need to run a step once pi returns.
+if [ "${1:-}" = "update" ]; then
+	"$dir/pi" "$@"
+	status=$?
+	"$HOME/.local/bin/pi-sync-agents" || true
+	exit "$status"
+fi
+
 exec "$dir/pi" "$@"
