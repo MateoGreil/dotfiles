@@ -30,5 +30,5 @@
   "quietStartup": true,
   "httpIdleTimeoutMs": 60000,
   "enableInstallTelemetry": false,
-  "hideThinkingBlock": true
+  "hideThinkingBlock": false
 }
