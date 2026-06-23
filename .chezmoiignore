@@ -3,3 +3,11 @@
 # regenerated at runtime and would constantly drift / get clobbered by apply.
 .pi/agent/agent-board
 .pi/agent/boards
+
+# Repo meta-docs — these are the dotfiles repo's own guide/readme, NOT dotfiles.
+# Anchored with a leading slash so they only match the repo root and never the
+# legitimate, deployed .pi/agent/AGENTS.md or .claude/CLAUDE.md. Without this,
+# they land at ~/AGENTS.md and ~/CLAUDE.md and pollute the agent context of
+# every project under ~.
+/AGENTS.md
+/CLAUDE.md
