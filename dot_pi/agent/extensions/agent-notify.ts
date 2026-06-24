@@ -49,6 +49,8 @@ export default function (pi: ExtensionAPI) {
     const failed = message?.stopReason === "error";
     const body = failed ? `❌ ${preview(message) || "Erreur"}` : preview(message) || "✅ Terminé";
 
-    send(basename(ctx.cwd) || "pi", body, failed ? "critical" : "normal");
+    const folder = basename(ctx.cwd);
+    const title = folder ? `pi - ${folder}` : "pi";
+    send(title, body, failed ? "critical" : "normal");
   });
 }
