@@ -1,9 +1,9 @@
 {
-  "lastChangelogVersion": "0.79.10",
+  "lastChangelogVersion": "0.80.2",
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
-  "defaultThinkingLevel": "xhigh",
+  "defaultThinkingLevel": "high",
   "editorPaddingX": 1,
   "steeringMode": "all",
   "skills": [
@@ -20,8 +20,7 @@
     "npm:pi-nvim",
     "npm:pi-agent-board",
     "npm:pi-web-access",
-    "https://github.com/obra/superpowers",
-    "npm:pi-notifi"
+    "https://github.com/obra/superpowers"
   ],
   "compaction": {
     "enabled": true
@@ -30,5 +29,5 @@
   "quietStartup": true,
   "httpIdleTimeoutMs": 60000,
   "enableInstallTelemetry": false,
-  "hideThinkingBlock": false
+  "hideThinkingBlock": true
 }
