@@ -30,7 +30,7 @@ Loop over the approved slices **in order**. For each slice, run the full cycle b
 
 1. **Isolate.** Load and follow `using-git-worktrees` to create a dedicated worktree so parallel agents never collide. Branch off `main` for an independent slice, off the previous slice's branch for a stacked one.
 2. **Build.** Load and follow `subagent-driven-development`, treating this slice's scope as its plan — fresh implementer subagent per task, TDD, task review, and the final whole-branch review. (This `create-pr` step replaces SDD's finishing-a-development-branch.)
-3. **Open the PR.** Load and follow `create-pr` to open the slice's pull request.
+3. **Open the PR.** Load and follow `create-pr` to open the slice's pull request **as a draft** (`gh pr create --draft`). Leave it for the user to mark ready for review.
 4. **Record** the slice's PR title, link, and one-line summary, then move to the next slice.
 
 **Done when:** every approved slice has an open PR.
