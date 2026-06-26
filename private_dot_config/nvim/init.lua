@@ -39,8 +39,11 @@ vim.api.nvim_create_autocmd("User", {
           pcall(vim.api.nvim_buf_set_name, vim.api.nvim_get_current_buf(), "pi")
           vim.cmd("startinsert")
         end,
+        AgentsBoard = function()
+          vim.cmd("AgentsBoard")
+        end,
       }
-      vim.ui.select({ "claude", "pi" }, { prompt = "Launch AI assistant:" }, function(choice)
+      vim.ui.select({ "AgentsBoard", "claude", "pi" }, { prompt = "Launch AI assistant:" }, function(choice)
         if choice and launchers[choice] then
           launchers[choice]()
         end
