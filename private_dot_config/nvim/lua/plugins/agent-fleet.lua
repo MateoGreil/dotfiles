@@ -11,7 +11,12 @@ return {
       { "<leader>ax", "<cmd>AgentArchive<cr>", desc = "Agent Fleet: archive" },
     },
     config = function()
-      require("agent-fleet").setup({})
+      require("agent-fleet").setup({
+        auto_name = {
+          enabled = true,
+          model = "anthropic/claude-haiku-4-5",
+        },
+      })
     end,
   },
 }
