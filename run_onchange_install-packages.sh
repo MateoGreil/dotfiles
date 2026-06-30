@@ -331,20 +331,6 @@ curl -fsSL https://raw.githubusercontent.com/rtk-ai/rtk/refs/heads/master/instal
 rtk init -g            # Claude Code
 rtk init -g --agent pi # Pi
 
-echo "🐶 Installing pup (Datadog API CLI)..."
-# https://github.com/DataDog/pup — official Datadog CLI (replaces the
-# deprecated dogshell). Pinned release binary lands in ~/.local/bin/pup.
-# Idempotent: skips the download when the pinned version is already installed.
-PUP_VERSION=1.6.0
-if ! pup version 2>/dev/null | grep -q "Pup $PUP_VERSION"; then
-  pup_tmp="$(mktemp -d)"
-  curl -fsSL -o "$pup_tmp/pup.tar.gz" \
-    "https://github.com/DataDog/pup/releases/download/v${PUP_VERSION}/pup_${PUP_VERSION}_Linux_x86_64.tar.gz"
-  tar -xzf "$pup_tmp/pup.tar.gz" -C "$pup_tmp" pup
-  install -m 0755 "$pup_tmp/pup" "$HOME/.local/bin/pup"
-  rm -rf "$pup_tmp"
-fi
-
 echo "🦊 Installing forgejo-mcp via 'go install'..."
 # https://codeberg.org/goern/forgejo-mcp — runs as a Claude Code MCP server.
 # Module path uses the /v2 suffix per its go.mod. GOTOOLCHAIN=auto lets Go
