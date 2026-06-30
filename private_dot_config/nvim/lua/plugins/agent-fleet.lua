@@ -1,7 +1,6 @@
 return {
   {
-    dir = vim.fn.expand("~/agent-fleet.nvim"),
-    name = "agent-fleet.nvim",
+    "MateoGreil/agent-fleet.nvim",
     cmd = { "Agent", "Agents", "AgentsBoard", "AgentResume", "AgentDone", "AgentArchive", "AgentRename" },
     keys = {
       { "<leader>aa", "<cmd>Agent<cr>", desc = "Agent Fleet: launch agent" },
