@@ -11,6 +11,7 @@ return {
     },
     config = function()
       require("agent-fleet").setup({
+        agents = { pi = {} },
         auto_name = {
           enabled = true,
           model = "anthropic/claude-haiku-4-5",
