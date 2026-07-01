@@ -52,6 +52,7 @@
       }
     ]
   },
+  "enableWorkflows": true,
   "statusLine": {
     "type": "command",
     "command": "/home/mat/.claude/statusline.sh"
@@ -86,14 +87,14 @@
     }
   },
   "effortLevel": "xhigh",
-  "enableWorkflows": true,
   "ultracode": true,
-  "skipWorkflowUsageWarning": true,
+  "tui": "fullscreen",
   "voice": {
     "enabled": true,
     "mode": "hold"
   },
   "skipDangerousModePermissionPrompt": true,
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "autoCompactEnabled": true,
   "agentPushNotifEnabled": true,
