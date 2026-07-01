@@ -144,6 +144,50 @@ StartupWMClass=zen
 Categories=Network;WebBrowser;
 DESKTOP
 rm -rf "$ZEN_TMP"
+echo "📧 Installing Tuta Mail desktop client..."
+# https://tuta.com/#download — the only official Linux client is an Electron
+# AppImage, served from a floating endpoint that always tracks the current
+# release (like Zen's latest/download). We extract it into /opt instead of
+# running the AppImage as-is so we can: (a) skip the libfuse2 dependency modern
+# Ubuntu no longer ships, and (b) make chrome-sandbox setuid-root, without which
+# Electron's SUID sandbox aborts and the app fails to launch silently
+# (tutao/tutanota#9498) — upstream works around this by shipping --no-sandbox,
+# but the setuid fix keeps the sandbox enabled. Idempotent: re-extracts each run.
+TUTA_TMP=$(mktemp -d)
+curl -fsSL -o "$TUTA_TMP/tuta.AppImage" \
+  https://app.tuta.com/desktop/tutanota-desktop-linux.AppImage
+chmod +x "$TUTA_TMP/tuta.AppImage"
+(cd "$TUTA_TMP" && ./tuta.AppImage --appimage-extract >/dev/null)
+sudo rm -rf /opt/tuta
+sudo mv "$TUTA_TMP/squashfs-root" /opt/tuta
+sudo chown -R root:root /opt/tuta
+# --appimage-extract leaves squashfs-root as 0700, so after chowning to root a
+# regular user can't traverse /opt/tuta; open it up for all (X = dirs/executables
+# only, doesn't touch the setuid bit set next).
+sudo chmod -R a+rX /opt/tuta
+sudo chmod 4755 /opt/tuta/chrome-sandbox
+sudo ln -sf /opt/tuta/AppRun /usr/local/bin/tuta
+# Ship the launcher entry under the SAME desktop-file ID Tuta writes for its own
+# runtime desktop integration (~/.local/share/applications/tutanota-desktop.desktop):
+# same basename = same XDG id, so the user-level copy overrides this one instead
+# of the launcher showing a duplicate. This system entry only bootstraps an icon
+# before Tuta's first launch. Drop the old tuta.desktop name from earlier runs.
+sudo rm -f /usr/share/applications/tuta.desktop
+sudo tee /usr/share/applications/tutanota-desktop.desktop >/dev/null <<'DESKTOP'
+[Desktop Entry]
+Name=Tuta Mail
+GenericName=Email Client
+Comment=Secure email, calendar and contacts
+Exec=/opt/tuta/AppRun %U
+Icon=/opt/tuta/tutanota-desktop.png
+Terminal=false
+Type=Application
+StartupNotify=true
+StartupWMClass=tutanota-desktop
+Categories=Network;Email;
+MimeType=x-scheme-handler/mailto;
+DESKTOP
+rm -rf "$TUTA_TMP"
 echo "📝 Installing Neovim text editor..."
 sudo snap install nvim --classic
 echo "🦀 Installing Ghostty terminal..."
