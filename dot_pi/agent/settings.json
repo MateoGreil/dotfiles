@@ -1,16 +1,11 @@
 {
-  "lastChangelogVersion": "0.80.2",
+  "lastChangelogVersion": "0.80.3",
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-sonnet-5",
   "defaultThinkingLevel": "high",
   "editorPaddingX": 1,
   "steeringMode": "all",
-  "skills": [
-    "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering/skills",
-    "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering-experiments/skills",
-    "~/.pi/agent/git/github.com/Go-Electra/claude-plugins/plugins/product-engineering-golang/skills"
-  ],
   "packages": [
     "npm:@tintinweb/pi-subagents",
     "npm:pi-mcp-adapter",
