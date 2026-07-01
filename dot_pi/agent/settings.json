@@ -15,8 +15,7 @@
     "npm:pi-nvim",
     "npm:pi-agent-board",
     "npm:pi-web-access",
-    "https://github.com/obra/superpowers",
-    "npm:remote-pi"
+    "https://github.com/obra/superpowers"
   ],
   "compaction": {
     "enabled": true
