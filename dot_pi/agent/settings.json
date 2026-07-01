@@ -2,7 +2,7 @@
   "lastChangelogVersion": "0.80.2",
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-4-8",
+  "defaultModel": "claude-sonnet-5",
   "defaultThinkingLevel": "high",
   "editorPaddingX": 1,
   "steeringMode": "all",
