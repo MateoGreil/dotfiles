@@ -23,14 +23,3 @@ vim.api.nvim_create_autocmd("TermLeave", {
     end
   end,
 })
-
-local term_insert = vim.api.nvim_create_augroup("TermAutoInsert", { clear = true })
-vim.api.nvim_create_autocmd({ "BufEnter", "WinEnter", "TermOpen" }, {
-  group = term_insert,
-  callback = function()
-    if vim.bo.buftype == "terminal" then
-      vim.wo.wrap = true
-      vim.cmd("startinsert")
-    end
-  end,
-})
