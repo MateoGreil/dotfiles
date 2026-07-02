@@ -4,7 +4,8 @@ return {
     cmd = { "Agent", "Agents", "AgentsBoard", "AgentResume", "AgentDone", "AgentArchive", "AgentRename", "AgentSend" },
     keys = {
       { "<leader>aa", "<cmd>Agent<cr>", desc = "Agent Fleet: launch agent" },
-      { "<leader>as", "<cmd>AgentSend<cr>", mode = { "n", "x" }, desc = "Agent Fleet: send selection to agent" },
+      { "<leader>as", "<cmd>AgentSend<cr>", desc = "Agent Fleet: send selection to agent" },
+      { "<leader>as", ":AgentSend<cr>", mode = "x", desc = "Agent Fleet: send selection to agent" },
       { "<leader>al", "<cmd>Agents<cr>", desc = "Agent Fleet: list & switch" },
       { "<leader>ab", "<cmd>AgentsBoard<cr>", desc = "Agent Fleet: board" },
       { "<leader>ad", "<cmd>AgentDone<cr>", desc = "Agent Fleet: done" },
