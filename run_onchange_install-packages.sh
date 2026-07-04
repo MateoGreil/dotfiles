@@ -356,6 +356,25 @@ sudo npm install -g gitmoji-cli
 echo "✅ gitmoji-cli installed to /usr/local/bin/gitmoji"
 echo ""
 
+# Joplin desktop section
+echo "================================================"
+echo "📓 INSTALLING JOPLIN DESKTOP"
+echo "================================================"
+# https://joplinapp.org/help/install/ — official Linux installer; puts the
+# AppImage in ~/.joplin and a desktop entry in ~/.local/share/applications
+# (user-level, no sudo needed). Downloaded to a file first (not piped to bash)
+# so the content is reviewable. Idempotent: exits early when the installed
+# version is already the latest. The AppImage needs libfuse2 (libfuse2t64
+# since noble); on Ubuntu 23+ the installer sets --no-sandbox in the desktop
+# entry (upstream workaround for user-namespace restrictions).
+sudo apt install -y libfuse2t64 || sudo apt install -y libfuse2
+JOPLIN_INSTALLER=$(mktemp)
+wget -qO "$JOPLIN_INSTALLER" https://raw.githubusercontent.com/laurent22/joplin/dev/Joplin_install_and_update.sh
+bash "$JOPLIN_INSTALLER"
+rm -f "$JOPLIN_INSTALLER"
+echo "✅ Joplin desktop installed to ~/.joplin/Joplin.AppImage"
+echo ""
+
 # Joplin CLI section
 echo "================================================"
 echo "📓 INSTALLING JOPLIN CLI"
