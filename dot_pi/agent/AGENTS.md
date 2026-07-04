@@ -12,6 +12,7 @@ Installed & authenticated locally — reach for these instead of an MCP.
 - **Google Workspace** (Drive, Sheets, Gmail, Calendar, Docs, Slides, Meet) → `gws` CLI
 - **Slack** → `slackcli` CLI
 - **Datadog** → `pup` CLI (`pup auth login` once) — for ad-hoc log/metric/trace/monitor queries
+- **Joplin** (notes, notebooks) → `joplin-cli` CLI (needs Joplin running with Web Clipper API + `JOPLIN_API_TOKEN`)
 - **Omni** (BI / analytics: dashboards, queries, models, documents) → `omni` CLI
 
 (Configured MCP servers are discoverable at runtime via the `mcp` tool, so they're not listed here.)

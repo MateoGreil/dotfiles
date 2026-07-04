@@ -356,6 +356,26 @@ sudo npm install -g gitmoji-cli
 echo "✅ gitmoji-cli installed to /usr/local/bin/gitmoji"
 echo ""
 
+# Joplin CLI section
+echo "================================================"
+echo "📓 INSTALLING JOPLIN CLI"
+echo "================================================"
+# https://github.com/vsaw/joplin-cli — thin CLI over the Joplin Data API
+# (audited at the pinned commit: axios/yargs only, no exec/telemetry/lifecycle
+# scripts). The README's `npm install -g github:vsaw/joplin-cli` ships no code
+# (dist/ is gitignored and there is no prepare script), so clone the audited
+# commit, build, and install the built package. Bump JOPLIN_CLI_COMMIT after
+# re-auditing to upgrade. Needs JOPLIN_API_TOKEN at runtime (zshrc secrets).
+# Idempotent: npm install -g reinstalls in place.
+JOPLIN_CLI_COMMIT="8bdb063270b08004ef85efd9a0577c5d2530591c"
+JOPLIN_CLI_TMP=$(mktemp -d)
+git clone --quiet https://github.com/vsaw/joplin-cli "$JOPLIN_CLI_TMP"
+git -C "$JOPLIN_CLI_TMP" checkout --quiet "$JOPLIN_CLI_COMMIT"
+(cd "$JOPLIN_CLI_TMP" && npm ci && npm run build && sudo npm install -g .)
+rm -rf "$JOPLIN_CLI_TMP"
+echo "✅ joplin-cli installed to /usr/local/bin/joplin-cli"
+echo ""
+
 # MCP servers section
 echo "================================================"
 echo "🔌 INSTALLING MCP SERVERS"
