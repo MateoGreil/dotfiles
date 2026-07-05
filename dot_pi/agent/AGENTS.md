@@ -21,6 +21,8 @@ Installed & authenticated locally — reach for these instead of an MCP.
 
 Always work in a dedicated **git worktree** rather than directly in the main checkout, so multiple agents running in parallel don't step on each other (conflicting edits, half-applied changes, racing on the same branch). One worktree per task. (A repo's own `AGENTS.md` may override this — e.g. the chezmoi dotfiles repo forbids worktrees.)
 
+**Location:** always create worktrees inside the repo under `.worktrees/<task-name>`. **Never** default to a sibling path like `../foo` — that litters the parent directory (often `~`) with stray folders. Make sure `.worktrees/` is ignored: add it to `.git/info/exclude` if it isn't already in `.gitignore`. Example: `git worktree add .worktrees/fix-login fix-login`. Remove the worktree (`git worktree remove`) once the task is merged/abandoned.
+
 ## Development work
 
 When a task requires actual development (writing or changing code across multiple steps), use the **`/subagent-driven-development`** workflow rather than implementing everything inline.
