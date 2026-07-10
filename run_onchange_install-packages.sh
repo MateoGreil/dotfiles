@@ -237,7 +237,7 @@ sudo apt install -y gh
 
 echo "🍵 Installing tea (Forgejo/Gitea CLI)..."
 # https://dl.gitea.com/tea/ — bump TEA_VERSION to upgrade
-TEA_VERSION="0.11.0"
+TEA_VERSION="0.14.2"
 TEA_ARCH=$(dpkg --print-architecture)
 sudo curl -fsSL "https://dl.gitea.com/tea/${TEA_VERSION}/tea-${TEA_VERSION}-linux-${TEA_ARCH}" \
   -o /usr/local/bin/tea
