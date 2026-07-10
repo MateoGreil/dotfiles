@@ -333,6 +333,7 @@ echo "🧩 Installing pi packages..."
 pi install npm:@tintinweb/pi-subagents || true
 pi install npm:pi-mcp-adapter || true
 pi install npm:@the-forge-flow/pi-rules || true
+pi install npm:@juicesharp/rpiv-ask-user-question || true
 # https://github.com/mattpocock/skills — agent skill collection, installed as a
 # pi git package. pi recursively discovers the SKILL.md folders under skills/.
 # Tracks main (no pinned ref); 'pi update' pulls latest and pi flags updates at

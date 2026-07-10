@@ -15,7 +15,8 @@
     "npm:pi-nvim",
     "npm:pi-agent-board",
     "npm:pi-web-access",
-    "https://github.com/obra/superpowers"
+    "https://github.com/obra/superpowers",
+    "npm:@juicesharp/rpiv-ask-user-question"
   ],
   "compaction": {
     "enabled": false
