@@ -1,9 +1,9 @@
 {
-  "lastChangelogVersion": "0.80.3",
+  "lastChangelogVersion": "0.80.6",
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-4-8",
-  "defaultThinkingLevel": "xhigh",
+  "defaultModel": "claude-fable-5",
+  "defaultThinkingLevel": "max",
   "editorPaddingX": 1,
   "steeringMode": "all",
   "packages": [
@@ -18,11 +18,14 @@
     "https://github.com/obra/superpowers"
   ],
   "compaction": {
-    "enabled": true
+    "enabled": false
   },
   "showHardwareCursor": false,
   "quietStartup": true,
   "httpIdleTimeoutMs": 60000,
   "enableInstallTelemetry": false,
-  "hideThinkingBlock": false
+  "hideThinkingBlock": false,
+  "terminal": {
+    "showImages": false
+  }
 }
