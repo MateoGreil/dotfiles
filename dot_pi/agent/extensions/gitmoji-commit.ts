@@ -40,10 +40,36 @@ function gitmoji(): Promise<Gitmoji> {
   return cached;
 }
 
+function commitArgWindow(command: string, start: number): string {
+  let i = start;
+  const len = command.length;
+  let quote: '"' | "'" | null = null;
+  while (i < len) {
+    const ch = command[i];
+    if (quote === '"') {
+      if (ch === '\\') i += 2;
+      else if (ch === '"') { quote = null; i += 1; }
+      else i += 1;
+    } else if (quote === "'") {
+      if (ch === "'") { quote = null; i += 1; }
+      else i += 1;
+    } else {
+      if (ch === '\\') i += 2;
+      else if (ch === '"') { quote = '"'; i += 1; }
+      else if (ch === "'") { quote = "'"; i += 1; }
+      else if (ch === '\n' || ch === '\r' || ch === ';' || ch === ')') break;
+      else if (ch === '&' && command[i + 1] === '&') break;
+      else if (ch === '|') break;
+      else i += 1;
+    }
+  }
+  return command.slice(start, i);
+}
+
 function firstCommitSubject(command: string): string | null {
   const commit = COMMIT_BOUNDARY.exec(command);
   if (!commit) return null;
-  const rest = command.slice(commit.index + commit[0].length);
+  const rest = commitArgWindow(command, commit.index + commit[0].length);
   const message = MESSAGE_ARG.exec(rest);
   if (!message) return null;
   return message[2] ?? message[3] ?? message[4] ?? "";
