@@ -7,3 +7,7 @@ wm.program.terminal: /snap/bin/ghostty
 ! regolith-look-gruvbox theme); use the Fausto-Korpsvart port installed by
 ! run_onchange_install-packages.sh.
 gtk.theme_name: Gruvbox-Dark-Medium
+
+! Free Super+A for the pi-agents picker (see i3/config.d/11_pi-agents): Regolith
+! binds $mod+a to "focus parent" by default; park it on a dead key to disable it.
+wm.binding.focus_parent: F13

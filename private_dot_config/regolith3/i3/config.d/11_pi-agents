@@ -1,5 +1,5 @@
 # Super+A: open the pi-agents picker (same action as clicking the 🤖 bar indicator).
 # Lists running agent-fleet agents; pick one to jump to its nvim buffer + window.
-# bindcode 38 (physical 'a' key), not bindsym a: the layout has two xkb groups, so
-# keysym 'a' resolves twice and `bindsym $mod+a` triggers duplicate-binding errors.
-bindcode $mod+38 exec --no-startup-id ~/.local/bin/pi-agents-focus
+# Regolith binds $mod+a to "focus parent" by default; we disable that by parking it
+# on a dead key via wm.binding.focus_parent in ~/.config/regolith3/Xresources.
+bindsym $mod+a exec --no-startup-id ~/.local/bin/pi-agents-focus
