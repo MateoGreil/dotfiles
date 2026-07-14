@@ -1,51 +1,75 @@
 #!/usr/bin/env bash
 # Jump to a running agent-fleet agent, wherever it lives.
 # Agents are terminal BUFFERS inside nvim (possibly several nvim instances), so
-# a window's title only reflects the buffer currently shown. We therefore
-# enumerate agents over each nvim's RPC socket (buffer-independent), and on
-# selection we (1) tell that nvim to switch to the agent's buffer, then
-# (2) focus its Ghostty window.
+# a window's title only reflects the buffer currently shown. We enumerate agents
+# over each nvim's RPC socket (buffer-independent), tagging each with its OS pid
+# (via jobpid) so we can show a busy/idle marker. On selection we tell that nvim
+# to switch to the agent's buffer, then focus its Ghostty window.
+#   ● = occupe (thinking, CPU>=5%, or running a tool)   ○ = idle (waiting)
 set -eu
 
 RT="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
 AF="agent-fleet.agent"
+LUA="vim.json.encode((function() local ok,m=pcall(require,'$AF'); if not ok then return {} end; local o={}; for _,a in ipairs(m.list()) do local okp,pid=pcall(vim.fn.jobpid,a.job); o[#o+1]={sid=a.session_id,name=a.name,cwd=a.cwd,pid=(okp and pid or 0)} end; return o end)())"
 
-labels=(); socks=(); sids=(); cwds=(); names=()
+socks=(); sids=(); cwds=(); names=(); pids=()
 for sock in "$RT"/nvim.*; do
     [ -S "$sock" ] || continue
-    json="$(timeout 1 nvim --server "$sock" --remote-expr \
-        "luaeval(\"vim.json.encode((pcall(require,'$AF')) and require('$AF').list() or {})\")" \
-        2>/dev/null || true)"
+    json="$(timeout 1 nvim --server "$sock" --remote-expr "luaeval(\"$LUA\")" 2>/dev/null || true)"
     [ -n "$json" ] || continue
-    while IFS=$'\t' read -r sid name cwd; do
+    while IFS=$'\t' read -r sid name cwd pid; do
         [ -n "$sid" ] || continue
-        labels+=("$name  —  $(basename "$cwd")")
-        socks+=("$sock"); sids+=("$sid"); cwds+=("$cwd"); names+=("$name")
+        socks+=("$sock"); sids+=("$sid"); cwds+=("$cwd"); names+=("$name"); pids+=("$pid")
     done < <(printf '%s' "$json" | jq -r \
-        'if type=="array" then .[] else empty end | [.session_id, .name, .cwd] | @tsv' 2>/dev/null || true)
+        'if type=="array" then .[] else empty end | [.sid,.name,.cwd,(.pid|tostring)] | @tsv' 2>/dev/null || true)
 done
 
-n=${#labels[@]}
+n=${#sids[@]}
 [ "$n" -gt 0 ] || exit 0
 
-if [ "$n" -eq 1 ]; then
-    idx=0
-else
-    chosen="$(printf '%s\n' "${labels[@]}" | ilia -p textlist -l "Pi agents" 2>/dev/null || true)"
+pick() {  # -> sets idx
+    if [ "$n" -eq 1 ]; then idx=0; return; fi
+
+    # busy state per agent: CPU>=5% over a short sample, or has child processes
+    local CLK i p u s delta pct; CLK="$(getconf CLK_TCK 2>/dev/null || echo 100)"
+    [ "$CLK" -gt 0 ] 2>/dev/null || CLK=100
+    local -A j1
+    for i in "${!pids[@]}"; do
+        p="${pids[$i]}"
+        if [ "$p" -gt 0 ] 2>/dev/null && [ -r "/proc/$p/stat" ]; then
+            read -r u s < <(awk '{print $14, $15}' "/proc/$p/stat" 2>/dev/null) && j1[$i]=$((u + s)) || j1[$i]=-1
+        else j1[$i]=-1; fi
+    done
+    sleep 0.25
+    local labels=() mark
+    for i in "${!sids[@]}"; do
+        mark="○"; p="${pids[$i]}"
+        if [ "${j1[$i]}" != "-1" ] && [ -r "/proc/$p/stat" ]; then
+            read -r u s < <(awk '{print $14, $15}' "/proc/$p/stat" 2>/dev/null) || true
+            delta=$(( (u + s) - ${j1[$i]:-0} ))
+            pct=$(( delta * 10000 / (25 * CLK) ))
+            if [ "$pct" -ge 5 ] || [ -n "$(pgrep -P "$p" 2>/dev/null || true)" ]; then mark="●"; fi
+        fi
+        labels+=("$mark  ${names[$i]}  —  $(basename "${cwds[$i]}")")
+    done
+
+    local chosen
+    chosen="$(printf '%s\n' "${labels[@]}" | ilia -p textlist -l "Pi agents   ● occupé   ○ idle" 2>/dev/null || true)"
     [ -n "$chosen" ] || exit 0
     idx=-1
     for i in "${!labels[@]}"; do [ "${labels[$i]}" = "$chosen" ] && { idx=$i; break; }; done
     [ "$idx" -ge 0 ] || exit 0
-fi
+}
 
+pick
 sock="${socks[$idx]}"; sid="${sids[$idx]}"; base="$(basename "${cwds[$idx]}")"; name="${names[$idx]}"
 
-# 1) switch that nvim to the agent's buffer (also updates the window title)
+# switch that nvim to the agent's buffer (also updates the window title)
 timeout 2 nvim --server "$sock" --remote-expr \
     "luaeval(\"require('$AF').resume_session({id=_A[1],type='pi'}) and 1 or 0\", ['$sid'])" \
     >/dev/null 2>&1 || true
 
-# 2) focus the Ghostty window now showing that agent (match by unique name, then cwd)
+# focus the Ghostty window now showing that agent (match by unique name, then cwd)
 focus_match() {
     local pat="$1" w t
     for w in $(xdotool search --class ghostty 2>/dev/null || true); do
@@ -56,7 +80,6 @@ focus_match() {
     done
     return 1
 }
-
 for _ in 1 2 3 4; do
     focus_match "*agent:$name*" && exit 0
     focus_match "$base - agent:*" && exit 0
