@@ -1,0 +1,9 @@
+# Pi agents: number of running `pi` processes + working/idle state.
+#   green N       -> N agents, all idle (waiting)
+#   yellow N·W▶   -> N agents, W currently working (thinking or running a tool)
+#   grey 0        -> no agent running
+# Left-click: jump to a running agent's terminal window (ilia picker).
+[pi-agents]
+command=/home/mat/.local/bin/pi-agents-status
+interval=3
+markup=pango

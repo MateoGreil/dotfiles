@@ -1,0 +1,65 @@
+#!/usr/bin/env bash
+# Jump to a running agent-fleet agent, wherever it lives.
+# Agents are terminal BUFFERS inside nvim (possibly several nvim instances), so
+# a window's title only reflects the buffer currently shown. We therefore
+# enumerate agents over each nvim's RPC socket (buffer-independent), and on
+# selection we (1) tell that nvim to switch to the agent's buffer, then
+# (2) focus its Ghostty window.
+set -eu
+
+RT="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"
+AF="agent-fleet.agent"
+
+labels=(); socks=(); sids=(); cwds=(); names=()
+for sock in "$RT"/nvim.*; do
+    [ -S "$sock" ] || continue
+    json="$(timeout 1 nvim --server "$sock" --remote-expr \
+        "luaeval(\"vim.json.encode((pcall(require,'$AF')) and require('$AF').list() or {})\")" \
+        2>/dev/null || true)"
+    [ -n "$json" ] || continue
+    while IFS=$'\t' read -r sid name cwd; do
+        [ -n "$sid" ] || continue
+        labels+=("$name  —  $(basename "$cwd")")
+        socks+=("$sock"); sids+=("$sid"); cwds+=("$cwd"); names+=("$name")
+    done < <(printf '%s' "$json" | jq -r \
+        'if type=="array" then .[] else empty end | [.session_id, .name, .cwd] | @tsv' 2>/dev/null || true)
+done
+
+n=${#labels[@]}
+[ "$n" -gt 0 ] || exit 0
+
+if [ "$n" -eq 1 ]; then
+    idx=0
+else
+    chosen="$(printf '%s\n' "${labels[@]}" | ilia -p textlist -l "Pi agents" 2>/dev/null || true)"
+    [ -n "$chosen" ] || exit 0
+    idx=-1
+    for i in "${!labels[@]}"; do [ "${labels[$i]}" = "$chosen" ] && { idx=$i; break; }; done
+    [ "$idx" -ge 0 ] || exit 0
+fi
+
+sock="${socks[$idx]}"; sid="${sids[$idx]}"; base="$(basename "${cwds[$idx]}")"; name="${names[$idx]}"
+
+# 1) switch that nvim to the agent's buffer (also updates the window title)
+timeout 2 nvim --server "$sock" --remote-expr \
+    "luaeval(\"require('$AF').resume_session({id=_A[1],type='pi'}) and 1 or 0\", ['$sid'])" \
+    >/dev/null 2>&1 || true
+
+# 2) focus the Ghostty window now showing that agent (match by unique name, then cwd)
+focus_match() {
+    local pat="$1" w t
+    for w in $(xdotool search --class ghostty 2>/dev/null || true); do
+        t="$(xdotool getwindowname "$w" 2>/dev/null || true)"
+        case "$t" in
+            $pat) i3-msg -q "[id=$w] focus" >/dev/null 2>&1 && return 0 ;;
+        esac
+    done
+    return 1
+}
+
+for _ in 1 2 3 4; do
+    focus_match "*agent:$name*" && exit 0
+    focus_match "$base - agent:*" && exit 0
+    sleep 0.15
+done
+exit 0

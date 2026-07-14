@@ -1,0 +1,49 @@
+#!/usr/bin/env bash
+# i3xrocks block: count running `pi` agents on the machine + working/idle state.
+# Working = the agent is thinking (CPU >= 5%) or running a tool (has child procs).
+# Left-click (BLOCK_BUTTON=1) opens an ilia picker to jump to an agent's window.
+set -eu
+
+btn="${BLOCK_BUTTON:-${button:-}}"
+if [ "$btn" = "1" ]; then
+    ( "$HOME/.local/bin/pi-agents-focus" >/dev/null 2>&1 ) &
+fi
+
+pids=( $(pgrep -x pi 2>/dev/null || true) )
+if [ "${#pids[@]}" -eq 0 ]; then
+    printf '<span color="#928374">🤖 0</span>\n'
+    exit 0
+fi
+
+CLK="$(getconf CLK_TCK 2>/dev/null || echo 100)"
+[ "$CLK" -gt 0 ] 2>/dev/null || CLK=100
+SAMPLE=0.25
+SAMPLE_CS=25
+
+declare -A j1
+for p in "${pids[@]}"; do
+    read -r u s < <(awk '{print $14, $15}' /proc/"$p"/stat 2>/dev/null) || { j1[$p]=0; continue; }
+    j1[$p]=$((u + s))
+done
+
+sleep "$SAMPLE"
+
+working=0
+for p in "${pids[@]}"; do
+    read -r u s < <(awk '{print $14, $15}' /proc/"$p"/stat 2>/dev/null) || continue
+    delta=$(( (u + s) - ${j1[$p]:-0} ))
+    pct=$(( delta * 10000 / (SAMPLE_CS * CLK) ))
+    has_kids=0
+    if [ -n "$(pgrep -P "$p" 2>/dev/null || true)" ]; then has_kids=1; fi
+    if [ "$pct" -ge 5 ] || [ "$has_kids" = "1" ]; then
+        working=$((working + 1))
+    fi
+done
+
+n=${#pids[@]}
+if [ "$working" = "0" ]; then
+    col="#8ec07c"; val="$n"
+else
+    col="#fabd2f"; val="$n·${working}▶"
+fi
+printf '<span color="#928374">🤖</span> <span color="%s">%s</span>\n' "$col" "$val"

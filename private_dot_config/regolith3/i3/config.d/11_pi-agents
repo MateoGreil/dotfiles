@@ -1,0 +1,3 @@
+# Super+A: open the pi-agents picker (same action as clicking the 🤖 bar indicator).
+# Lists running agent-fleet agents; pick one to jump to its nvim buffer + window.
+bindsym $mod+a exec --no-startup-id ~/.local/bin/pi-agents-focus
