@@ -1,9 +1,9 @@
 {
-  "lastChangelogVersion": "0.80.6",
+  "lastChangelogVersion": "0.80.7",
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
-  "defaultThinkingLevel": "max",
+  "defaultThinkingLevel": "xhigh",
   "editorPaddingX": 1,
   "steeringMode": "all",
   "packages": [
