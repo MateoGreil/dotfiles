@@ -3,7 +3,7 @@
   "theme": "gruvbox-dark",
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-4-8",
-  "defaultThinkingLevel": "xhigh",
+  "defaultThinkingLevel": "max",
   "editorPaddingX": 1,
   "steeringMode": "all",
   "packages": [
@@ -15,8 +15,7 @@
     "npm:pi-nvim",
     "npm:pi-agent-board",
     "npm:pi-web-access",
-    "https://github.com/obra/superpowers",
-    "npm:@juicesharp/rpiv-ask-user-question"
+    "https://github.com/obra/superpowers"
   ],
   "compaction": {
     "enabled": false
