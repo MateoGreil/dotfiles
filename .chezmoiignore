@@ -4,6 +4,14 @@
 .pi/agent/agent-board
 .pi/agent/boards
 
+# pi settings.json is both user config AND runtime state: pi writes the
+# last-used model/provider/thinking-level/changelog-version on every model
+# switch (agent-session.js setModel -> setDefaultModelAndProvider -> save), so
+# version-controlling it means permanent meaningless drift. The stable keys
+# (theme, packages, prefs) are enforced instead by
+# run_onchange_sync-pi-settings.sh via a non-destructive deep merge.
+.pi/agent/settings.json
+
 # Repo meta-docs — these are the dotfiles repo's own guide/readme, NOT dotfiles.
 # Anchored with a leading slash so they only match the repo root and never the
 # legitimate, deployed .pi/agent/AGENTS.md or .claude/CLAUDE.md. Without this,

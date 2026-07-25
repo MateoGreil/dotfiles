@@ -194,8 +194,8 @@ echo "🦀 Installing Ghostty terminal..."
 sudo snap install ghostty --classic
 echo "🔐 Installing Bitwarden..."
 sudo snap install bitwarden
-echo "🧰 Installing ripgrep, xclip, fzf..."
-sudo apt install -y ripgrep xclip fzf universal-ctags
+echo "🧰 Installing ripgrep, xclip, fzf, jq..."
+sudo apt install -y ripgrep xclip fzf jq universal-ctags
 echo "🌱 Installing git..."
 sudo apt install -y git
 echo "💻 Installing omzsh..."
