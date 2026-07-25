@@ -10,13 +10,16 @@ const SETTINGS_FILE = join(AGENT_DIR, "settings.json");
 interface Pin {
   provider: string;
   model: string;
+  thinkingLevel?: string;
 }
 
 function readPin(): Pin | null {
   try {
     const data = JSON.parse(readFileSync(PIN_FILE, "utf-8"));
     if (typeof data.provider === "string" && typeof data.model === "string") {
-      return { provider: data.provider, model: data.model };
+      const pin: Pin = { provider: data.provider, model: data.model };
+      if (typeof data.thinkingLevel === "string") pin.thinkingLevel = data.thinkingLevel;
+      return pin;
     }
   } catch {}
   return null;
@@ -31,7 +34,9 @@ function readSettingsDefaults(): Pin | null {
   try {
     const data = JSON.parse(readFileSync(SETTINGS_FILE, "utf-8"));
     if (typeof data.defaultProvider === "string" && typeof data.defaultModel === "string") {
-      return { provider: data.defaultProvider, model: data.defaultModel };
+      const pin: Pin = { provider: data.defaultProvider, model: data.defaultModel };
+      if (typeof data.defaultThinkingLevel === "string") pin.thinkingLevel = data.defaultThinkingLevel;
+      return pin;
     }
   } catch {}
   return null;
@@ -42,6 +47,7 @@ function writeSettingsDefaults(pin: Pin): void {
     const data = JSON.parse(readFileSync(SETTINGS_FILE, "utf-8"));
     data.defaultProvider = pin.provider;
     data.defaultModel = pin.model;
+    if (pin.thinkingLevel !== undefined) data.defaultThinkingLevel = pin.thinkingLevel;
     writeFileSync(SETTINGS_FILE, JSON.stringify(data, null, 2), "utf-8");
   } catch (e) {
     console.error(`[pin-model] failed to write settings: ${e}`);
@@ -50,7 +56,12 @@ function writeSettingsDefaults(pin: Pin): void {
 
 function restoreIfDrifted(pin: Pin): boolean {
   const cur = readSettingsDefaults();
-  if (cur && (cur.provider !== pin.provider || cur.model !== pin.model)) {
+  const drifted =
+    !!cur &&
+    (cur.provider !== pin.provider ||
+      cur.model !== pin.model ||
+      (pin.thinkingLevel !== undefined && cur.thinkingLevel !== pin.thinkingLevel));
+  if (drifted) {
     writeSettingsDefaults(pin);
     return true;
   }
