@@ -24,8 +24,11 @@ function preview(message: Message | undefined): string {
   return line.length > 120 ? `${line.slice(0, 117)}…` : line;
 }
 
-function send(title: string, body: string, urgency: "normal" | "critical"): void {
-  execFile("notify-send", ["--app-name", "pi", "--urgency", urgency, title, body], () => {});
+function send(title: string, body: string): void {
+  const display = process.env.DISPLAY ?? ":0";
+  const env = { ...process.env, DISPLAY: display };
+  execFile("herbe", [title, body], { env }, () => {});
+  execFile("paplay", ["/usr/share/sounds/freedesktop/stereo/message.oga"], { env }, () => {});
 }
 
 export default function (pi: ExtensionAPI) {
@@ -51,6 +54,6 @@ export default function (pi: ExtensionAPI) {
 
     const folder = basename(ctx.cwd);
     const title = folder ? `pi - ${folder}` : "pi";
-    send(title, body, failed ? "critical" : "normal");
+    send(title, body);
   });
 }
