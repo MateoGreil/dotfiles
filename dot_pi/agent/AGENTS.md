@@ -17,6 +17,12 @@ Installed & authenticated locally — reach for these instead of an MCP.
 
 (Configured MCP servers are discoverable at runtime via the `mcp` tool, so they're not listed here.)
 
+## AWS access expired (SSO)
+
+AWS is SSO (~8h token). On `SSO session ... has expired` / `ExpiredToken`, ask the user to run `aws sso login --profile <profile>` (`genai-prod` for Bedrock) — it needs their browser, don't attempt the device-code flow yourself. Nothing else to reconfigure.
+
+Don't trust `aws sts get-caller-identity`: the `aws` CLI reads `~/.aws/cli/cache/` (longer-lived role creds) while pi reads `~/.aws/sso/cache/` (the token that expires), so the CLI can pass while pi fails — test through pi.
+
 ## Git worktrees
 
 Always work in a dedicated **git worktree** rather than directly in the main checkout, so multiple agents running in parallel don't step on each other (conflicting edits, half-applied changes, racing on the same branch). One worktree per task. (A repo's own `AGENTS.md` may override this — e.g. the chezmoi dotfiles repo forbids worktrees.)
