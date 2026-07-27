@@ -1,5 +1,5 @@
 {
   "provider": "amazon-bedrock",
-  "model": "us.anthropic.claude-fable-5",
+  "model": "us.anthropic.claude-opus-5",
   "thinkingLevel": "high"
 }
