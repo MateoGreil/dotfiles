@@ -1,5 +1,5 @@
 {
-  "provider": "amazon-bedrock",
-  "model": "us.anthropic.claude-opus-5",
+  "provider": "bedrock-mantle",
+  "model": "openai.gpt-5.6-luna",
   "thinkingLevel": "high"
 }
