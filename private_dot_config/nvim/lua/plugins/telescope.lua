@@ -9,6 +9,18 @@ return {
     local lga_actions = require("telescope-live-grep-args.actions")
     opts.extensions = opts.extensions or {}
     opts.extensions.live_grep_args = {
+      vimgrep_arguments = {
+        "rg",
+        "--color=never",
+        "--no-heading",
+        "--with-filename",
+        "--line-number",
+        "--column",
+        "--smart-case",
+        "--hidden",
+        "--glob",
+        "!**/.git/*",
+      },
       auto_quoting = true, -- auto-wrap the first word in quotes
       mappings = {
         i = {
