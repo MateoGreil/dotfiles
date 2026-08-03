@@ -29,10 +29,6 @@ Always work in a dedicated **git worktree** rather than directly in the main che
 
 **Location:** always create worktrees inside the repo under `.worktrees/<task-name>`. **Never** default to a sibling path like `../foo` — that litters the parent directory (often `~`) with stray folders. Make sure `.worktrees/` is ignored: add it to `.git/info/exclude` if it isn't already in `.gitignore`. Example: `git worktree add .worktrees/fix-login fix-login`. Remove the worktree (`git worktree remove`) once the task is merged/abandoned.
 
-## Before writing code or opening a PR
-
-Always run the **`ship-prs`** skill (`/skill:ship-prs`) *before* starting any code change or creating a PR. Its job is to grill the topic and slice it into small, independently-shippable PRs, so we are explicitly aligned on **what** we are doing and **in what order** before any code is written. No implementation, no branch, no PR until that alignment step has happened.
-
 ## Development work
 
 When a task requires actual development (writing or changing code across multiple steps), use the **`/subagent-driven-development`** workflow rather than implementing everything inline.
