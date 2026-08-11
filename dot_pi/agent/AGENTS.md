@@ -23,6 +23,10 @@ AWS is SSO (~8h token). On `SSO session ... has expired` / `ExpiredToken`, ask t
 
 Don't trust `aws sts get-caller-identity`: the `aws` CLI reads `~/.aws/cli/cache/` (longer-lived role creds) while pi reads `~/.aws/sso/cache/` (the token that expires), so the CLI can pass while pi fails — test through pi.
 
+## Superpowers artifacts
+
+Plans, specs, and every other Markdown file produced by Superpowers are local artifacts: never add them to the index, commit them, or push them. Before committing, verify that none are present in the staged changes.
+
 ## Git worktrees
 
 Always work in a dedicated **git worktree** rather than directly in the main checkout, so multiple agents running in parallel don't step on each other (conflicting edits, half-applied changes, racing on the same branch). One worktree per task. (A repo's own `AGENTS.md` may override this — e.g. the chezmoi dotfiles repo forbids worktrees.)
