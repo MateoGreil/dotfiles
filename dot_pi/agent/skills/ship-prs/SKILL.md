@@ -12,7 +12,7 @@ A **slice** is one PR that is independently shippable: it merges to `main` alone
 
 ## 1. Grill the topic
 
-Load and follow the `grilling` skill on the topic the user passed in. Resolve every design branch and dependency before moving on.
+Load and follow the `grilling` skill on the topic the user passed in. Ask grilling questions strictly one at a time: wait for the user's answer before asking the next question, and never batch multiple questions in one message. Resolve every design branch and dependency before moving on.
 
 **Done when:** you and the user share a clear, complete understanding of what's being built.
 
