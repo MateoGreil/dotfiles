@@ -214,10 +214,155 @@ echo "================================================"
 # always rebuilds from latest master and overwrites the binary.
 sudo apt install -y libx11-dev libxft-dev libxinerama-dev make gcc
 HERBE_TMP=$(mktemp -d)
+HERBE_PATCH=$(mktemp)
 git clone --depth 1 https://github.com/dudik/herbe.git "$HERBE_TMP"
+
+# Emoji fallback: upstream herbe renders all text with a single Xft font and
+# no glyph fallback, so emoji (absent from DejaVu Sans Mono) showed as tofu
+# squares. Noto Color Emoji cannot be used: Xft cannot rasterize its CBDT
+# color bitmaps. This patch adds a per-glyph fallback to Noto Emoji
+# (monochrome outlines, Xft-renderable), fetched below.
+cat > "$HERBE_PATCH" <<'HERBE_PATCH_EOF'
+diff --git a/config.def.h b/config.def.h
+index 86b7e76..66cdbd3 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -2,6 +2,7 @@ static const char *background_color = "#3e3e3e";
+ static const char *border_color = "#ececec";
+ static const char *font_color = "#ececec";
+ static const char *font_pattern = "monospace:size=10";
++static const char *fallback_font_pattern = "Noto Emoji:size=10";
+ static const unsigned line_spacing = 5;
+ static const unsigned int padding = 15;
+ 
+diff --git a/herbe.c b/herbe.c
+index 51d3990..ffd0f18 100644
+--- a/herbe.c
++++ b/herbe.c
+@@ -1,5 +1,6 @@
+ #include <X11/Xlib.h>
+ #include <X11/Xft/Xft.h>
++#include <fontconfig/fontconfig.h>
+ #include <stdio.h>
+ #include <stdlib.h>
+ #include <signal.h>
+@@ -70,6 +71,74 @@ int get_max_len(char *string, XftFont *font, int max_text_width)
+ 		return ++eol;
+ }
+ 
++static int utf8_decode(const char *s, int len, FcChar32 *out)
++{
++	unsigned char c = (unsigned char)s[0];
++	if (c < 0x80)
++	{
++		*out = c;
++		return 1;
++	}
++	if ((c & 0xE0) == 0xC0 && len >= 2)
++	{
++		*out = ((FcChar32)(c & 0x1F) << 6) | ((FcChar32)((unsigned char)s[1] & 0x3F));
++		return 2;
++	}
++	if ((c & 0xF0) == 0xE0 && len >= 3)
++	{
++		*out = ((FcChar32)(c & 0x0F) << 12) | ((FcChar32)((unsigned char)s[1] & 0x3F) << 6) | ((FcChar32)((unsigned char)s[2] & 0x3F));
++		return 3;
++	}
++	if ((c & 0xF8) == 0xF0 && len >= 4)
++	{
++		*out = ((FcChar32)(c & 0x07) << 18) | ((FcChar32)((unsigned char)s[1] & 0x3F) << 12) | ((FcChar32)((unsigned char)s[2] & 0x3F) << 6) | ((FcChar32)((unsigned char)s[3] & 0x3F));
++		return 4;
++	}
++	*out = 0xFFFD;
++	return 1;
++}
++
++static void draw_string_with_fallback(XftDraw *draw, XftColor *color, XftFont *font, XftFont *fallback, int x, int y, const char *line)
++{
++	int len = strlen(line);
++	int cursor_x = x;
++	int run_start = 0;
++
++	while (run_start < len)
++	{
++		FcChar32 codepoint;
++		int step = utf8_decode(&line[run_start], len - run_start, &codepoint);
++		if (step <= 0)
++			step = 1;
++
++		int run_uses_fallback = fallback && !XftCharExists(display, font, codepoint);
++		int run_end = run_start + step;
++
++		while (run_end < len)
++		{
++			int next_step = utf8_decode(&line[run_end], len - run_end, &codepoint);
++			if (next_step <= 0)
++				next_step = 1;
++
++			int next_uses_fallback = fallback && !XftCharExists(display, font, codepoint);
++			if (next_uses_fallback != run_uses_fallback)
++				break;
++
++			run_end += next_step;
++		}
++
++		XftFont *run_font = run_uses_fallback ? fallback : font;
++		int run_len = run_end - run_start;
++		XftDrawStringUtf8(draw, color, run_font, cursor_x, y, (FcChar8 *)&line[run_start], run_len);
++
++		XGlyphInfo extents;
++		XftTextExtentsUtf8(display, run_font, (FcChar8 *)&line[run_start], run_len, &extents);
++		cursor_x += extents.xOff;
++
++		run_start = run_end;
++	}
++}
++
+ void expire(int sig)
+ {
+ 	XEvent event;
+@@ -130,6 +199,9 @@ int main(int argc, char *argv[])
+ 		die("malloc failed");
+ 
+ 	XftFont *font = XftFontOpenName(display, screen, font_pattern);
++	XftFont *fallback_font = XftFontOpenName(display, screen, fallback_font_pattern);
++	if (!fallback_font)
++		fallback_font = NULL;
+ 
+ 	for (int i = 1; i < argc; i++)
+ 	{
+@@ -189,8 +261,7 @@ int main(int argc, char *argv[])
+ 		{
+ 			XClearWindow(display, window);
+ 			for (int i = 0; i < num_of_lines; i++)
+-				XftDrawStringUtf8(draw, &color, font, padding, line_spacing * i + text_height * (i + 1) + padding,
+-								  (FcChar8 *)lines[i], strlen(lines[i]));
++				draw_string_with_fallback(draw, &color, font, fallback_font, padding, line_spacing * i + text_height * (i + 1) + padding, lines[i]);
+ 		}
+ 		else if (event.type == ButtonPress)
+ 		{
+@@ -214,6 +285,8 @@ int main(int argc, char *argv[])
+ 	XftDrawDestroy(draw);
+ 	XftColorFree(display, visual, colormap, &color);
+ 	XftFontClose(display, font);
++	if (fallback_font)
++		XftFontClose(display, fallback_font);
+ 	XCloseDisplay(display);
+ 
+ 	return exit_code;
+HERBE_PATCH_EOF
+patch -d "$HERBE_TMP" -p1 -N < "$HERBE_PATCH"
+
 sudo make -C "$HERBE_TMP" clean install
-rm -rf "$HERBE_TMP"
+rm -rf "$HERBE_TMP" "$HERBE_PATCH"
 echo "✅ Herbe installed to /usr/local/bin/herbe"
+
+# Monochrome Noto Emoji font (herbe fallback, see patch above). Ubuntu ships
+# no package for the monochrome variant, so fetch the OFL variable font.
+mkdir -p "$HOME/.local/share/fonts"
+curl -fsSL -o "$HOME/.local/share/fonts/NotoEmoji-VF.ttf" \
+  'https://github.com/google/fonts/raw/main/ofl/notoemoji/NotoEmoji%5Bwght%5D.ttf'
+fc-cache -f >/dev/null 2>&1 || true
 echo ""
 
 # Git forge CLIs section
