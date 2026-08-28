@@ -10,5 +10,6 @@
   },
   "model": "amazon-bedrock/openai.gpt-5.6-luna",
   "default_agent": "plan",
+  "instructions": ["~/.pi/agent/AGENTS.md"],
   "permission": "allow"
 }
