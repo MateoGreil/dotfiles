@@ -13,7 +13,7 @@ return {
     },
     config = function()
       require("agent-fleet").setup({
-        default_agent = "opencode",
+        default_agent = "pi",
         agents = { pi = {}, opencode = {} },
         auto_name = {
           enabled = true,
