@@ -13,7 +13,8 @@ return {
     },
     config = function()
       require("agent-fleet").setup({
-        agents = { pi = {} },
+        default_agent = "opencode",
+        agents = { pi = {}, opencode = {} },
         auto_name = {
           enabled = true,
           model = "anthropic/claude-haiku-4-5",
