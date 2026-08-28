@@ -1,0 +1,5 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // "yolo mode" : tout est auto-accepté (edit, bash, webfetch, ...)
+  "permission": "allow"
+}
