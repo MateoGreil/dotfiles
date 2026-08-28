@@ -118,13 +118,13 @@ fi
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias vi="nvim"
 alias vimgolf="docker run --rm -it -e \"key=$VIMGOLF_KEY\" ghcr.io/filbranden/vimgolf"
-eval "$(~/.local/bin/mise activate zsh)"
-
 # Pi
 export PATH="/home/mat/.local/share/pi-node/node-v22.22.3-linux-x64/bin:$PATH"
 # ~/.local/bin holds a `pi` wrapper that scopes the agent-board per project; it
 # must win over pi-node's own `pi`, so keep it ahead on PATH.
 export PATH="$HOME/.local/bin:$PATH"
+
+eval "$(~/.local/bin/mise activate zsh)"
 
 # pi-agent-board
 export AGENT_BOARD_SUMMARY_MODEL="anthropic/claude-haiku-4-5" # for row summaries
@@ -138,3 +138,6 @@ if [ -f '/tmp/gcloud/google-cloud-sdk/path.zsh.inc' ]; then . '/tmp/gcloud/googl
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/tmp/gcloud/google-cloud-sdk/completion.zsh.inc' ]; then . '/tmp/gcloud/google-cloud-sdk/completion.zsh.inc'; fi
+
+# opencode
+export PATH=/home/mat/.opencode/bin:$PATH

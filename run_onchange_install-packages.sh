@@ -190,6 +190,8 @@ DESKTOP
 rm -rf "$TUTA_TMP"
 echo "📝 Installing Neovim text editor..."
 sudo snap install nvim --classic
+echo "🤖 Installing OpenCode..."
+curl -fsSL https://opencode.ai/install | bash
 echo "🦀 Installing Ghostty terminal..."
 sudo snap install ghostty --classic
 echo "🔐 Installing Bitwarden..."
