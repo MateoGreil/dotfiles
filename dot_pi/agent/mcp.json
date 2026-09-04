@@ -1,16 +1,16 @@
 {
+  "settings": {
+    "mcpFooterStatus": "off"
+  },
   "mcpServers": {
     "notion": {
       "type": "http",
       "url": "https://mcp.notion.com/mcp"
     },
-    "electra-pe-core": {
+    "metabase": {
       "type": "http",
-      "url": "https://pe-core-mcp.go-electra.com/mcp"
-    },
-    "electra-pe-inside": {
-      "type": "http",
-      "url": "https://pe-inside-mcp.go-electra.com/mcp"
+      "url": "https://bi.electratools.com/api/metabase-mcp",
+      "auth": "oauth"
     },
     "linear": {
       "type": "http",
