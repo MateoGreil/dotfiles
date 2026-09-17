@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Take the topic the user gave and ship it as **slices**: the smallest PRs that each merge to `main` on their own. The work runs slice by slice, end to end — never as one big batch.
 
-A **slice** is one PR that is independently shippable: it merges to `main` alone, without waiting for any later slice, and merging it never breaks prod. Prefer many small slices over one large PR — small is easier to review. Slices may **stack** (branch off the previous slice's branch instead of `main`) when one genuinely depends on another; a stacked slice is still scoped so its own merge is safe.
+A **slice** is one PR that is independently shippable: it merges to `main` alone, without waiting for any later slice, and merging it never breaks prod. Every PR must contain no more than **300 changed lines** (insertions plus deletions), counting production code, tests, migrations, and configuration. This is a hard limit, not a target: if a slice would exceed 300 changed lines, split it into additional independently shippable slices before building. Do not exceed the limit because of urgency, dependencies, migrations, tests, or review convenience. Prefer many small slices over one large PR — small is easier to review. Slices may **stack** (branch off the previous slice's branch instead of `main`) when one genuinely depends on another; a stacked slice is still scoped so its own merge is safe.
 
 ## 1. Grill the topic
 
