@@ -32,11 +32,11 @@ STABLE='{
     "git:github.com/mattpocock/skills",
     "git:github.com/Go-Electra/claude-plugins",
     "npm:pi-nvim",
-    "npm:pi-agent-board",
+    "npm:pi-powerline-footer",
     "npm:pi-web-access",
     "https://github.com/obra/superpowers"
   ],
-  "compaction": { "enabled": false },
+  "compaction": { "enabled": true },
   "steeringMode": "all",
   "editorPaddingX": 1,
   "showHardwareCursor": false,
@@ -44,7 +44,29 @@ STABLE='{
   "httpIdleTimeoutMs": 60000,
   "enableInstallTelemetry": false,
   "hideThinkingBlock": false,
-  "terminal": { "showImages": false }
+  "terminal": { "showImages": false },
+  "powerline": {
+    "preset": "default",
+    "disabledSegments": ["cache_read", "cost"],
+    "placement": "above",
+    "welcome": true,
+    "path": { "mode": "basename" },
+    "model": { "display": "name" },
+    "cost": {
+      "subscriptionDisplay": "subscription",
+      "currency": "USD"
+    },
+    "customItems": [
+      {
+        "id": "perf",
+        "statusKey": "perf-metrics",
+        "position": "right",
+        "prefix": "",
+        "color": "accent",
+        "hideWhenMissing": true
+      }
+    ]
+  }
 }'
 
 mkdir -p "$(dirname "$TARGET")"

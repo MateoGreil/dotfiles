@@ -24,12 +24,22 @@ Present the plan to the user: the number of slices, each slice's scope in one li
 
 **Done when:** the user has signed off on the number of slices and their scope. Do not build before sign-off.
 
-## 3. Ship each slice, one at a time
+## 3. Choose the implementation workflow
+
+After the user signs off on the slice plan, and before isolating or building any slice, ask explicitly:
+
+> Do you want to enable `subagent-driven-development` for this run? Reply yes or no.
+
+Wait for an explicit answer. Do not infer the choice from urgency, previous preferences, or approval of the slice plan. Apply the answer to every approved slice unless the user asks to change it.
+
+**Done when:** the user has answered yes or no.
+
+## 4. Ship each slice, one at a time
 
 Loop over the approved slices **in order**. For each slice, run the full cycle before touching the next one:
 
 1. **Isolate.** Load and follow `using-git-worktrees` to create a dedicated worktree so parallel agents never collide. Branch off `main` for an independent slice, off the previous slice's branch for a stacked one.
-2. **Build.** Load and follow `subagent-driven-development`, treating this slice's scope as its plan — fresh implementer subagent per task, TDD, task review, and the final whole-branch review. (This `create-pr` step replaces SDD's finishing-a-development-branch.)
+2. **Build.** If enabled, load and follow `subagent-driven-development`, treating this slice's scope as its plan — fresh implementer subagent per task, TDD, task review, and the final whole-branch review. If disabled, skip `subagent-driven-development` and implement directly in the isolated worktree while preserving the repository's testing and review requirements. (This `create-pr` step replaces SDD's finishing-a-development-branch.)
 3. **Open the PR.** Load and follow `create-pr` to open the slice's pull request **as a draft** (`gh pr create --draft`). Leave it for the user to mark ready for review.
 4. **Record** the slice's PR title, link, and one-line summary, then move to the next slice.
 
@@ -37,7 +47,7 @@ Loop over the approved slices **in order**. For each slice, run the full cycle b
 
 **Never batch.** Building every slice and only then opening the PRs is the exact failure this skill exists to prevent. A slice is not finished until its PR is open; the next slice's build does not start before that.
 
-## 4. Report
+## 5. Report
 
 For every PR opened, output one block:
 
