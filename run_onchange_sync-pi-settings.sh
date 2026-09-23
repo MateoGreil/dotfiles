@@ -54,7 +54,7 @@ STABLE='{
     "model": { "display": "name" },
     "cost": {
       "subscriptionDisplay": "subscription",
-      "currency": "USD"
+      "currency": "EUR"
     },
     "customItems": [
       {
