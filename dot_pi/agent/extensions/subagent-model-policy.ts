@@ -13,7 +13,7 @@ export default function (pi: ExtensionAPI) {
 		const parent = ctx.model;
 		const provider = parent?.provider;
 		const input = event.input as AgentToolInput | undefined;
-		if (!input) return;
+		if (!input || input.model) return;
 
 		if (provider === "anthropic") {
 			input.model = ANTHROPIC_SUBAGENT_MODEL;
