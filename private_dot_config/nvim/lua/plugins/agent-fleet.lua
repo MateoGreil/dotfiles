@@ -1,9 +1,10 @@
 return {
   {
     "MateoGreil/agent-fleet.nvim",
-    cmd = { "Agent", "Agents", "AgentsBoard", "AgentResume", "AgentDone", "AgentArchive", "AgentRename", "AgentSend" },
+    cmd = { "Agent", "Agents", "AgentsBoard", "AgentResume", "AgentDone", "AgentArchive", "AgentRename", "AgentSend", "AgentPick" },
     keys = {
       { "<leader>aa", "<cmd>Agent<cr>", desc = "Agent Fleet: launch agent" },
+      { "<leader>aA", "<cmd>AgentPick<cr>", desc = "Agent Fleet: pick agent & launch" },
       { "<leader>as", "<cmd>AgentSend<cr>", desc = "Agent Fleet: send selection to agent" },
       { "<leader>as", ":AgentSend<cr>", mode = "x", desc = "Agent Fleet: send selection to agent" },
       { "<leader>al", "<cmd>Agents<cr>", desc = "Agent Fleet: list & switch" },
@@ -15,6 +16,7 @@ return {
       require("agent-fleet").setup({
         default_agent = "pi",
         agents = { pi = {}, opencode = {} },
+        launch_input = "name",
         auto_name = {
           enabled = true,
           model = "anthropic/claude-haiku-4-5",
