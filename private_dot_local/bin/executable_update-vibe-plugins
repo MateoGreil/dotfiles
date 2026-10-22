@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+# Update the git-cloned Vibe plugins under ~/.vibe/plugins.
+# After pulling, run /reload-plugins inside Vibe (or restart it) to re-pin
+# the session's plugin snapshot — running sessions keep the old one.
+set -euo pipefail
+
+PLUGINS_DIR="$HOME/.vibe/plugins"
+
+if [[ ! -d "$PLUGINS_DIR" ]]; then
+  echo "update-vibe-plugins: $PLUGINS_DIR n'existe pas — rien à mettre à jour." >&2
+  exit 0
+fi
+
+found=0
+for gitdir in "$PLUGINS_DIR"/*/.git; do
+  [[ -d "$gitdir" ]] || continue
+  found=1
+  repo_dir="${gitdir%/.git}"
+  name="$(basename "$repo_dir")"
+  echo "→ $name : git pull"
+  git -C "$repo_dir" pull --ff-only
+done
+
+if [[ "$found" -eq 0 ]]; then
+  echo "update-vibe-plugins: aucun clone git trouvé dans $PLUGINS_DIR." >&2
+  exit 0
+fi
+
+echo
+echo "Fait. Dans Vibe : /reload-plugins (ou redémarre la session) pour recharger les skills."
