@@ -124,6 +124,18 @@ export PATH="/home/mat/.local/share/pi-node/node-v22.22.3-linux-x64/bin:$PATH"
 # must win over pi-node's own `pi`, so keep it ahead on PATH.
 export PATH="$HOME/.local/bin:$PATH"
 
+# Mistral Vibe
+# `vibe update --extensions` is not a real Vibe command (Vibe has no extension
+# manager). Intercept it to git-pull the plugin clones in ~/.vibe/plugins via
+# update-vibe-plugins; every other invocation goes to the real binary.
+vibe() {
+  if [[ "$1" == "update" && "$2" == "--extensions" ]]; then
+    command update-vibe-plugins "$@"
+  else
+    command vibe "$@"
+  fi
+}
+
 eval "$(~/.local/bin/mise activate zsh)"
 
 # pi-agent-board
