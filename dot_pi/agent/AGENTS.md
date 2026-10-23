@@ -1,4 +1,4 @@
-# Global agent instructions (pi)
+# Global agent instructions (shared by pi and Mistral Vibe)
 
 ## Prefer these CLIs over any MCP/connector for their service
 
@@ -21,7 +21,7 @@ Installed & authenticated locally — reach for these instead of an MCP.
 
 AWS is SSO (~8h token). On `SSO session ... has expired` / `ExpiredToken`, ask the user to run `aws sso login --profile <profile>` (`genai-prod` for Bedrock) — it needs their browser, don't attempt the device-code flow yourself. Nothing else to reconfigure.
 
-Don't trust `aws sts get-caller-identity`: the `aws` CLI reads `~/.aws/cli/cache/` (longer-lived role creds) while pi reads `~/.aws/sso/cache/` (the token that expires), so the CLI can pass while pi fails — test through pi.
+Don't trust `aws sts get-caller-identity`: the `aws` CLI reads `~/.aws/cli/cache/` (longer-lived role creds) while the agent reads `~/.aws/sso/cache/` (the token that expires), so the CLI can pass while the agent fails — test through the agent.
 
 ## Superpowers artifacts
 
