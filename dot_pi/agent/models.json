@@ -1,0 +1,85 @@
+{
+  "$schema": "https://pi.dev/schemas/models.schema.json",
+  "providers": {
+    "mistral-vibe": {
+      "name": "Mistral Vibe",
+      "baseUrl": "https://api.mistral.ai",
+      "api": "mistral-conversations",
+      "apiKey": "!/home/mat/.local/bin/vibe-api-key",
+      "models": [
+        {
+          "id": "mistral-medium-latest",
+          "name": "Mistral Medium 3.5",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": null,
+            "low": null,
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": null
+          },
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 262144,
+          "maxTokens": 262144
+        },
+        {
+          "id": "mistral-large-4",
+          "name": "Mistral Large 4",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": "none",
+            "minimal": null,
+            "low": null,
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": null
+          },
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 1048576,
+          "maxTokens": 262144
+        },
+        {
+          "id": "zai-glm-5-3",
+          "name": "GLM 5.3",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": null,
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "input": ["text"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 1048576,
+          "maxTokens": 131072
+        },
+        {
+          "id": "zai-glm-5-3-flash",
+          "name": "GLM 5.3 Flash",
+          "reasoning": true,
+          "thinkingLevelMap": {
+            "off": null,
+            "minimal": null,
+            "low": "low",
+            "medium": null,
+            "high": "high",
+            "xhigh": null,
+            "max": "max"
+          },
+          "input": ["text", "image"],
+          "cost": { "input": 0, "output": 0, "cacheRead": 0, "cacheWrite": 0 },
+          "contextWindow": 1048576,
+          "maxTokens": 131072
+        }
+      ]
+    }
+  }
+}
