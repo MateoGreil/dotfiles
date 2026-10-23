@@ -15,7 +15,7 @@ return {
     config = function()
       require("agent-fleet").setup({
         default_agent = "pi",
-        agents = { pi = {}, opencode = {} },
+        agents = { pi = {}, opencode = {}, vibe = {} },
         launch_input = "name",
         auto_name = {
           enabled = true,
