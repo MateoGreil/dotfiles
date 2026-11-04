@@ -1,79 +1,90 @@
 ---
 name: ship-prs
-description: Turn a topic into the smallest independently-shippable PRs, with parallel builds for independent slices and review follow-up through approval.
+description: Build a topic through a confirmed direct or spec-first workflow, publish draft PRs of at most 300 changed lines, and offer a retrospective.
 disable-model-invocation: true
 ---
 
 # Ship PRs
 
-Take the topic the user gave and ship it as **slices**: the smallest PRs that each merge to `main` on their own. Each slice runs its own build-and-open cycle; independent slices may run in parallel.
+Choose the workflow for the **whole topic** with the user, then build and publish it as small draft PRs. The workflow choice and PR boundaries are separate decisions: a large feature can need a spec and still ship through several small PRs.
 
-A **slice** is one PR that is independently shippable: it merges to `main` alone, without waiting for any later slice, and merging it never breaks prod. Every PR must contain no more than **300 changed lines** (insertions plus deletions), counting production code, tests, migrations, and configuration. This is a hard limit, not a target: if a slice would exceed 300 changed lines, split it into additional independently shippable slices before building. Do not exceed the limit because of urgency, dependencies, migrations, tests, or review convenience. Prefer many small slices over one large PR — small is easier to review. Slices may **stack** (branch off the previous slice's branch instead of `main`) when one genuinely depends on another; a stacked slice is still scoped so its own merge is safe.
+**PR budget:** every PR is limited to **300 changed lines**, additions plus deletions across all changed text files, including tests, migrations, configuration and documentation. This is a hard ceiling, not a target. Each slice must be safe to merge onto its declared base; dependencies may use stacked PRs.
 
-## 1. Grill the topic
+## Execute the skills
 
-Load and follow the `grilling` skill on the topic the user passed in. Ask grilling questions strictly one at a time: wait for the user's answer before asking the next question, and never batch multiple questions in one message. Resolve every design branch and dependency before moving on.
+In Pi, load Matt Pocock skills by reading `~/.pi/agent/git/github.com/mattpocock/skills/skills/engineering/<name>/SKILL.md` and following their instructions. Resolve `~` to an absolute path for tool calls. When a loaded skill asks for a Skill tool that this harness lacks, read and follow the referenced skill instead; `grilling` and `writing-for-agents` live under `skills/productivity/` rather than `skills/engineering/`.
 
-Before writing code, confirm new vocabulary (type, package, and port names) with the user. Naming found elsewhere in the codebase is not approval for newly introduced vocabulary. Confirm any new names that emerge during implementation before using them.
+This explicit invocation of `ship-prs` authorizes the selected chain; keep each skill's user-confirmation gates. If a required skill is unavailable, report the blocker rather than substituting an improvised workflow. Repository instructions govern isolation, branching, artifacts and publication; surface any conflict before taking the affected action.
 
-**Done when:** you and the user share a clear, complete understanding of what's being built and agree on the new vocabulary identified so far.
+## 1. Recommend a route and ask
 
-## 2. Propose the slice plan
+Inspect the request, relevant repository instructions and enough existing code to assess scope, uncertainty, dependencies and risk. Use facts you can inspect; leave product and design decisions to the user.
 
-Break the work into the smallest independently shippable slices. Minimize the scope of each PR, not the number of PRs. For each, the merge-safety test must hold: it ships to `main` alone and merging it can't break prod. Decide which slices stack and which are independent and can be built in parallel.
+Recommend one route:
 
-Present the plan to the user: the number of slices, each slice's scope in one line, and its branch base (`main` or the slice it stacks on). If the whole topic is already small and clear, propose a single slice and say so.
+- **Direct → `/implement`** for a localized, well-understood change whose implementation and review fit in one context window, with little unresolved design or rollout risk.
+- **Spec-first → `/grill-with-docs` → `/to-spec` → `/to-tickets` → `/implement-spec`** for several dependent deliverables, a multi-session build, substantial unresolved design, or consequential architecture, contract, data or rollout choices.
 
-**Done when:** the user has signed off on the number of slices and their scope. Do not build before sign-off.
+Give one or two concrete reasons and ask, in the user's language:
 
-## 3. Choose the implementation workflow
+> Je recommande **[direct / avec spec]**, parce que **[raisons propres à ce sujet]**. Tu valides ce parcours, ou tu préfères l'autre ?
 
-After the user signs off on the slice plan, and before isolating or building any slice, ask explicitly:
+Wait for the user's choice before planning artifacts, implementation or worker dispatch. Approval of the topic is not approval of a route.
 
-> Do you want to enable `subagent-driven-development` for this run? Reply yes or no.
+**Done when:** the user has explicitly selected direct or spec-first.
 
-Wait for an explicit answer. Do not infer the choice from urgency, previous preferences, or approval of the slice plan. Apply the answer to every approved slice unless the user asks to change it.
+If a selected phase requires an issue tracker and it is not configured, load `setup-matt-pocock-skills` and complete its confirmation gates before that phase.
 
-**Done when:** the user has answered yes or no.
+## 2A. Direct: `/implement`
 
-## 4. Build and open each slice
+Create or reuse the task workspace and branch according to repository policy. Load and follow `implement`, using the user's request or issue and confirmed behavior as its input. A formal spec is not required for this route; `implement` owns its TDD, verification, code review and commit cycle.
 
-Schedule the approved slices by dependency. Independent slices may be built in parallel when separate workers and worktrees are available and the user's workflow choice permits subagents. Otherwise, build sequentially. A stacked slice starts after its base slice's PR is open; it need not wait for that PR's approval.
+Keep the work within the agreed scope and plan for the PR budget. If investigation reveals substantial unresolved decisions or a multi-session effort, pause and recommend switching to spec-first; wait for the user's agreement before switching.
 
-Each slice follows its own cycle:
+**Done when:** the agreed behavior is implemented, verified, reviewed and committed. Continue to section 3.
 
-1. **Isolate.** Load and follow `using-git-worktrees` to create a dedicated worktree so parallel agents never collide. Branch off `main` for an independent slice, off its planned base branch for a stacked one.
-2. **Build.** If enabled, load and follow `subagent-driven-development`, treating this slice's scope as its plan — fresh implementer subagent per task, TDD, task review, and the final whole-branch review. If disabled, skip `subagent-driven-development` and implement directly in the isolated worktree while preserving the repository's testing and review requirements. (This `create-pr` step replaces SDD's finishing-a-development-branch.)
-3. **Open the PR.** Load and follow `create-pr` to open the slice's pull request **as a draft** (`gh pr create --draft`). Leave it for the user to mark ready for review.
-4. **Record and share** the slice's PR title, link, and one-line summary immediately, and start its review watch from step 5. Each slice's agent brief includes building, opening, watching reviews, handling findings, and maintaining its stack.
+## 2B. Spec-first: the full flow
 
-**Done when:** every approved slice has an open PR and an active review watch or approval on its latest head.
+Keep grilling, spec synthesis and ticket decomposition in the same conversation so the decisions remain primary context. Load each phase when it is reached, and complete it before starting the next.
 
-**Never batch.** Open each slice's PR as soon as its build and checks pass, without waiting for other slices to finish. Parallelism overlaps independent cycles; it does not defer PR creation to the end of a batch.
+1. **`grill-with-docs`** — follow its `grilling` and `domain-modeling` instructions, including rounds of currently answerable questions. Resolve the design branches and record the agreed vocabulary and qualifying ADRs.
+   **Done when:** the design frontier is empty and the user confirms the shared understanding.
+2. **`to-spec`** — synthesize the settled discussion rather than starting a new interview. Check that every agreed behavior, constraint and relevant edge case is represented, with testing decisions and explicit scope boundaries. Return unresolved decisions to grilling before finalizing the spec.
+   **Done when:** testing seams are confirmed and the complete spec is published to the configured tracker.
+3. **`to-tickets`** — turn the spec into vertical, verifiable tickets with blocking edges. Account for every spec requirement in acceptance criteria. Propose PR-sized slices and their bases as part of the breakdown, estimating against the PR budget rather than treating the whole spec as one PR.
+   **Done when:** the user approves the granularity and dependencies, and the tickets are published with their blocking relationships.
+4. **`implement-spec`** — build the task graph on one integration branch using the skill's implementers, integration process and final code review. Keep ticket work attributable so it can be prepared as the approved PR slices.
+   **Done when:** every ticket's acceptance criteria are satisfied and the integrated implementation passes verification and code review.
 
-## 5. Follow reviews and maintain stacks
+**Publication boundary:** `ship-prs` owns PR creation, draft status, tracker closure and review follow-up. Use `implement-spec` for implementation, verification and ticket integration; defer its automatic draft creation and ready-for-review/closure actions to section 3. The integration branch may exceed the PR budget, but must not itself become an oversized PR. Keep it available until the small PR branches are prepared, then clean up temporary worktrees according to repository policy.
 
-### Review findings
+## 3. Publish within the PR budget
 
-After opening each PR and after every push, watch review comments until `reviewDecision` is `APPROVED` on the latest head. Approval on an earlier commit does not complete the watch. Drafts remain drafts until the user marks them ready for review; keep the watch active while waiting.
+For either route:
 
-- Use one background loop per PR. Record review, PR comment, and inline comment counts at start; exit when any count changes or the PR is approved. A background command wakes the responsible agent when it exits. Handle new findings, then restart the watch if the latest head is not approved. Stop the previous loop before starting another.
-- Apply a fix only when the finding is relevant to the agreed design and prior decisions; otherwise reply with why. Re-verify fixes before pushing. Resolve each thread with a short answer after handling its finding.
-- If an agent hands back before approval, the coordinator checks that its watch is still running and restarts it through the agent if needed.
+1. Prepare the verified work as independently merge-safe PR slices. Use the repository's target branch for independent slices and the declared predecessor branch for stacked slices. Reuse the approved ticket breakdown on the spec-first route; a small direct change normally needs one PR.
+2. Fetch the current remote base and measure **each actual PR diff** using `git diff --numstat <PR-base>...<PR-head>`, summing additions plus deletions. A stacked PR is measured against its own declared base, not against the entire integration branch. Check this before creation and before every subsequent push.
+3. If a slice exceeds the budget, split it into smaller merge-safe slices and confirm the revised boundaries with the user before publishing. Verify the intermediate branches, not only the final integrated state. If a safe split is blocked, explain why and wait for a compatible plan; the budget is not waived.
+4. Load `pr` when writing each PR body. Push the verified slice and create its PR **as a draft**, using `gh` for GitHub or `tea` for Forgejo. Reuse an existing PR when appropriate and preserve any readiness change the user made. Open each ready slice without waiting for other PRs to be approved. Leave readiness and merging to the user.
+5. Link the spec and relevant tickets. Add closing references only to PRs that fully complete the referenced work; partial contributions use ordinary references. Follow the configured tracker's closure rules without claiming that opening a draft means the work has merged.
+6. Share each PR's title, URL, scope, measured line count and verification results. Report its actual review status on the latest head.
 
-### Stacked PRs
+**Done when:** every approved slice has a verified PR within budget, with new PRs in draft and existing user-selected readiness preserved, or a specific publication blocker has been reported.
 
-- A stacked PR tracks the current head of its base branch. Whenever the base gets a new commit, immediately rebase the stacked PR onto it, re-verify, and push with `--force-with-lease`.
-- Propagate each changed base through the stack from bottom to top before continuing dependent work. The coordinator ensures that a push to a base also triggers its dependent PR's agent to rebase, re-verify, and push.
-- After a base PR is squash-merged, rebase the next PR's own commits onto `main`, excluding the base commits already squash-merged, and retarget that PR to `main`. Re-verify and push with `--force-with-lease`, then update any PRs stacked above it in the same bottom-up order.
+## 4. Follow reviews and report
 
-**Done when:** every PR is approved on its latest head, all review findings are handled and threads resolved, and stacked branches are up to date and verified.
+For incoming review findings, load and follow `~/.pi/agent/skills/handle-pr-reviews/SKILL.md` with the PR URL. Preserve the agreed design and the PR budget through every fix and push.
 
-## 6. Report
+Keep stacked branches aligned with changes to their bases, propagating updates from bottom to top. Before pushing a changed base or retargeting a PR, verify and measure every affected PR's prospective comparison, including dependents whose heads are unchanged; block any transition that would breach the PR budget. Confirm the actual remote comparisons afterward. Re-verify after rebasing and use `--force-with-lease` when an authorized stack update needs a force-push. After a base merges, move its dependent PR onto the target branch without replaying already-merged changes.
 
-For every PR opened, output one block:
+Where the harness supports background review watchers with wake-up notifications, keep one watcher per PR until approval on its latest head. Otherwise report pending review without claiming an active watch. Pending review does not block the publication report or the retrospective offer.
 
-- **Title** — the PR title
-- **Link** — the PR URL
-- **What it does** — one line
-- **Review status** — approval on the latest head, or pending review with an active watch in an interim report
+Report each PR's title, link, scope, line count, checks and latest-head review status, along with outstanding findings or blockers.
+
+## 5. Offer `/retro`
+
+After the implementation and publication report, ask the user whether they want a retrospective on this run. Ask on both routes, while the session context is still available:
+
+> Souhaites-tu lancer `/retro` sur ce run ?
+
+Wait for the answer. On yes, load and follow `retro` using this session as the primary source. On no, finish without running it.
