@@ -33,6 +33,10 @@ Always work in a dedicated **git worktree** rather than directly in the main che
 
 **Location:** always create worktrees inside the repo under `.worktrees/<task-name>`. **Never** default to a sibling path like `../foo` — that litters the parent directory (often `~`) with stray folders. Make sure `.worktrees/` is ignored: add it to `.git/info/exclude` if it isn't already in `.gitignore`. Example: `git worktree add .worktrees/fix-login fix-login`. Remove the worktree (`git worktree remove`) once the task is merged/abandoned.
 
+## ffmpeg dans les boucles bash
+
+- Toujours `ffmpeg -nostdin` dans une boucle `while read` : sans cette option, ffmpeg consomme le stdin de la boucle et tronque les entrées suivantes (noms de fichiers « mangés », itérations sautées).
+
 ## Code comments
 
 Do **not** add comments to code unless explicitly asked. Write self-explanatory code (clear names, small functions) instead of explaining it with comments. Only add a comment when the user explicitly requests one, or to preserve an existing comment that's still relevant.
